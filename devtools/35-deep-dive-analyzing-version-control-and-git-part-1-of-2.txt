@@ -1,0 +1,8 @@
+REFF:
+===========
+1. git status
+2. git commit -m "Dicommit"
+3. git log # cek log git
+4. git branch
+5. git checkout -b my-great-feature
+6. git branch

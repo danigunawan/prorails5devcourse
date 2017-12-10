@@ -7,4 +7,4 @@ git commit -m "controller generator"
 git remote add origin git@github.com:danigunawan/prorails5devcourse.git
 git push origin controller-generator
 
-2.
+### BELUM DITERUSIN 

@@ -1,0 +1,8 @@
+REFF:
+=========
+1. pastikan sudah buat project dan meremote git
+git remote add origin git@github.com:danigunawan/prorails5devcourse.git
+2. git push -u origin master # dan pastikan sudah push kemaster
+3. touch README.md
+4. subl README.md
+5. git add .
