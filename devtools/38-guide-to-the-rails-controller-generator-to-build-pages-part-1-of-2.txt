@@ -1,0 +1,16 @@
+REFF:
+===========
+1. membuat generate controller Pages berikut view home about contact
+rails g controller Pages home about contact
+2. coba buka pages_controller.rb
+
+tambahkan instance variable @posts = Blog.all sehingga:
+  def home
+  	@posts = Blog.all
+  end
+
+3. buka views/pages/home.html.erb
+tambahkan :
+ini untuk menginspeksi instance variable 
+
+<%= @posts.inspect %>

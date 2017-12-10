@@ -1,0 +1,18 @@
+REFF :
+https://medium.com/@helenflam/how-to-change-your-rails-app-database-from-sqlite-to-postgresql-before-deploying-to-heroku-ae2acc25c7ac
+https://stackoverflow.com/questions/7086654/installing-postgres-on-windows-for-use-with-ruby-on-rails
+http://railscasts.com/episodes/342-migrating-to-postgresql?view=asciicast
+
+Membuat Generate Resources BLOG :
+================================================
+1. rails g scaffold Blog title:string body:text
+2. buat database di postgressql dengan nama : DevcampPortfolio_development
+atau bisa dengan cara otomtatis :
+rake db:create # ini automatis membuat database
+3. rails db:migrate
+
+#catatan saat migrate usahakan nama folder tidak mengandung angka karena pasti error (ini menggunakan laragon)
+
+4. rails s
+coba akses localhost:3000/blogs/new
+

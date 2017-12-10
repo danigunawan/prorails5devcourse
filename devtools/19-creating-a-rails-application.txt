@@ -1,0 +1,11 @@
+# JIKA WINDOWS Menggunakan Local Dev ENV Laragon
+1. rails new DevcampPortfolio -d postgresql
+
+karena laragon belum solved ror pakai postgresql kita pakai mysql dlu :
+
+rails new DevcampPortfolio -d mysql
+
+
+# JIKA DI MAC / Linux Buat project ror db postgree
+1. rails new DevcampPortfolio -T --database=postgresql
+

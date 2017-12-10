@@ -1,0 +1,59 @@
+REFF :
+ALUR ROR GENERATE RESOURCES
+============================
+1. ini alur generate
+rails g scaffold Blog title:string body:text
+     invoke  active_record
+     create    db/migrate/20171207090918_create_blogs.rb
+     create    app/models/blog.rb
+     invoke    test_unit
+     create      test/models/blog_test.rb
+     create      test/fixtures/blogs.yml
+     invoke  resource_route
+      route    resources :blogs
+     invoke  scaffold_controller
+     create    app/controllers/blogs_controller.rb
+     invoke    erb
+     create      app/views/blogs
+     create      app/views/blogs/index.html.erb
+     create      app/views/blogs/edit.html.erb
+     create      app/views/blogs/show.html.erb
+     create      app/views/blogs/new.html.erb
+     create      app/views/blogs/_form.html.erb
+     invoke    test_unit
+     create      test/controllers/blogs_controller_test.rb
+     invoke    helper
+     create      app/helpers/blogs_helper.rb
+     invoke      test_unit
+     invoke    jbuilder
+     create      app/views/blogs/index.json.jbuilder
+     create      app/views/blogs/show.json.jbuilder
+     create      app/views/blogs/_blog.json.jbuilder
+     invoke  test_unit
+     create    test/system/blogs_test.rb
+     invoke  assets
+     invoke    coffee
+     create      app/assets/javascripts/blogs.coffee
+     invoke    scss
+     create      app/assets/stylesheets/blogs.scss
+     invoke  scss
+     create    app/assets/stylesheets/scaffolds.scss
+
+2.  ALUR INDEX SHOW
+
+coba buka controller blogs tambahkan :
+  def show
+    @blog = Blog.find(params[:id]) # ini mencari seluruh parameter id dalam database model blogs
+  end
+
+jika :
+
+  def show
+    @blog = Blog.find(2) # mencari id bernilai 2 pada database blog model
+  end
+
+dan pada ini adalah aksi yang digunakan model :
+
+before_action :set_blog, only: [:show, :edit, :update, :destroy]
+
+

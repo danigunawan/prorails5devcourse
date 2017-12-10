@@ -1,0 +1,13 @@
+1. rails -h
+2. rails new -h # help panduan generate aplikasi baru
+3. rails new my_fast_app -B # ini tanpa run bundle install jadi bisa kita siapkan dulu bundle gem yang akan kita install di gemfile baru bundle run install
+4. rails new my_fast_app --skip-keeps # ini tanpa file .keep
+5. rails new my_fast_app --api -T # ini membuat aplikasi api tanpa test file resources
+6. membuat otomatis database dan migrate
+rails db:create && rails db:migrate
+# membuat resources scaffold post
+rails g scaffold Post name:string body:text
+rails db:migrate
+
+# menghapus scaffold
+rails destroy scaffold Post
