@@ -1,0 +1,47 @@
+REFF:
+https://github.com/rails/rails/blob/master/railties/lib/rails/generators/erb/scaffold/templates/index.html.erb.tt
+==========
+1. rails new GeneratorApp -T --database=postgresql # -T Tanpa turbolinks
+2. rails db:create
+3. rails g scaffold Post title:string body:text
+4. rails db:migrate
+5. rails g scaffold Guide title:string
+6. rails db:migrate
+7. buat index.html.erb di 
+buka lib/templates/erb/scaffold/index.html.erb
+isi dari index.html.erb:
+
+<h1><%= plural_table_name.titleize %></h1>
+<p id="notice"><%%= notice %></p>
+<hr>
+
+<table>
+  <thead>
+    <tr>
+<% attributes.reject(&:password_digest?).each do |attribute| -%>
+      <th><%= attribute.human_name %></th>
+<% end -%>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%% @<%= plural_table_name %>.each do |<%= singular_table_name %>| %>
+      <tr>
+<% attributes.reject(&:password_digest?).each do |attribute| -%>
+        <td><%%= <%= singular_table_name %>.<%= attribute.name %> %></td>
+<% end -%>
+        <td><%%= link_to 'Show', <%= model_resource_name %> %></td>
+        <td><%%= link_to 'Edit', edit_<%= singular_route_name %>_path(<%= singular_table_name %>) %></td>
+        <td><%%= link_to 'Destroy', <%= model_resource_name %>, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <%% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%%= link_to 'New <%= singular_table_name.titleize %>', new_<%= singular_route_name %>_path %>
+
+8. rails g scaffold Category title:string description:text
+9. rails db:migrate

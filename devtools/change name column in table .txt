@@ -1,0 +1,24 @@
+https://stackoverflow.com/questions/34796492/change-column-name-rails
+
+1. Run in your console:
+
+$ rails g migration rename_percent_complete_to_percent_utilized
+
+2. Now file db/migrate/20171210075557_rename_percent_complete_to_percent_utilized.rb contains following:
+
+class RenamePercentCompleteToPercentUtilized < ActiveRecord::Migration[5.1]
+  def change
+  end
+end
+
+
+Modify it as follows:
+
+class RenamePercentCompleteToPercentUtilized < ActiveRecord::Migration[5.1]
+  def change
+  	rename_column :skills, :percent_complete, :percent_utilized
+  end
+end
+
+
+3. Then run $ rake db:migrate in console.

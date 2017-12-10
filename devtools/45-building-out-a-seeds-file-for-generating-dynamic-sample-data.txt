@@ -1,10 +1,11 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+REFF : 
+1. git checkout -b portfolio-feature
+2. rails c
+Blog.create!(title: 'asdsadsada', body: 'asdsadas')
+3. keluar dari console ctrl+d
+4. buka H:\laragon\www\rubyonrails\professional-rails-lima-development-course\db\seeds.rb
+dibawah ini adalah seed dumy mirip laravel, isikan :
+
 
 10.times do |blog|
 	Blog.create!(
@@ -36,6 +37,19 @@ puts "5 Skills created"
 end
 
 puts "10 Portfolio item created"
+
+
+5. rails db:setup
+6. rails c
+
+Blog.all
+Portfolio.all
+Skill.all
+
+7. git status
+git add .
+git commit -m "created seeds file for sample data"
+git push origin portfolio-feature
 
 
 
