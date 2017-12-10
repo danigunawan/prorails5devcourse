@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
   def home
-  	@posts = Blog.all
+  	@posts = Blog.all # instance variable @posts beda dengan local variable
+  	@skills = Skill.all
   end
 
   def about

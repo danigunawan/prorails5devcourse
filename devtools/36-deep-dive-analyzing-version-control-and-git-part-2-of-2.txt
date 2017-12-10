@@ -6,3 +6,9 @@ git remote add origin git@github.com:danigunawan/prorails5devcourse.git
 3. touch README.md
 4. subl README.md
 5. git add .
+6. git commit -m "added readme"
+7. git remote -v
+8. edit README.md
+9. git add .
+10. git commit -m "more update readme"
+11. git pull

@@ -1,3 +1,27 @@
 REFF:
 =======
-1.
+1. git checkout -b model-generator
+2. membuat model Skill
+rails g model Skill title:string percent_complete:integer
+3. rails db:migrate
+4. rails c # rails console
+5. Skill.create!(title: "Rails", percent_complete: 75)
+6. Skill.all # menampilkan semua isi data Skill table
+7. pada pages_controller 
+tambahkan instance variable @skills = Skill.all :
+
+def home
+  	@posts = Blog.all # instance variable @posts beda dengan local variable
+  	@skills = Skill.all
+  end
+8. buka view pages/home.html.erb
+tambahkan :
+<h1>Skill Posts</h1>
+<%= @skills.inspect %> # inspect ini untuk melihat isi activerecord rails pada instance object skills
+
+9. git status
+10. git add .
+11. git commit -m "integrated skills via model generator"
+12. git checkout master
+13. git merge model-generator
+14.
