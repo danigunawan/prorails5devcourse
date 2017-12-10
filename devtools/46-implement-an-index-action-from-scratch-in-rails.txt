@@ -36,4 +36,4 @@ isi :
 4. git status
 git add .
 git commit -m "integrated index action for portfolios items"
-git push orifin portfolio-feature
+git push origin portfolio-feature

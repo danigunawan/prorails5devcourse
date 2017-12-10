@@ -1,0 +1,105 @@
+REFF:
+========
+1. Rake Routes
+
+? rake routes
+        Prefix Verb   URI Pattern                    Controller#Action
+    portfolios GET    /portfolios(.:format)          portfolios#index
+               POST   /portfolios(.:format)          portfolios#create
+ new_portfolio GET    /portfolios/new(.:format)      portfolios#new
+edit_portfolio GET    /portfolios/:id/edit(.:format) portfolios#edit
+     portfolio GET    /portfolios/:id(.:format)      portfolios#show
+               PATCH  /portfolios/:id(.:format)      portfolios#update
+               PUT    /portfolios/:id(.:format)      portfolios#update
+               DELETE /portfolios/:id(.:format)      portfolios#destroy
+    pages_home GET    /pages/home(.:format)          pages#home
+   pages_about GET    /pages/about(.:format)         pages#about
+ pages_contact GET    /pages/contact(.:format)       pages#contact
+         blogs GET    /blogs(.:format)               blogs#index
+               POST   /blogs(.:format)               blogs#create
+      new_blog GET    /blogs/new(.:format)           blogs#new
+     edit_blog GET    /blogs/:id/edit(.:format)      blogs#edit
+          blog GET    /blogs/:id(.:format)           blogs#show
+               PATCH  /blogs/:id(.:format)           blogs#update
+               PUT    /blogs/:id(.:format)           blogs#update
+               DELETE /blogs/:id(.:format)           blogs#destroy
+
+2. rake routes | grep portfolio
+
+? rake routes | grep portfolio
+    portfolios GET    /portfolios(.:format)          portfolios#index
+               POST   /portfolios(.:format)          portfolios#create
+ new_portfolio GET    /portfolios/new(.:format)      portfolios#new
+edit_portfolio GET    /portfolios/:id/edit(.:format) portfolios#edit
+     portfolio GET    /portfolios/:id(.:format)      portfolios#show
+               PATCH  /portfolios/:id(.:format)      portfolios#update
+               PUT    /portfolios/:id(.:format)      portfolios#update
+               DELETE /portfolios/:id(.:format)      portfolios#destroy
+
+
+3. buka portfolios_controller.rb
+tambahkan method new :
+
+def new
+
+end
+
+4. buat file new.html.erb di views/portfolios/new.html.erb
+isikan :
+<h1>Create a new portfolio item</h1>
+<%= form_for(@portfolio_item) do |f| %>
+
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subtitle %>
+    <%= f.text_area :subtitle %>
+  </div>
+
+    <div class="field">
+    <%= f.label :body %>
+    <%= f.text_area :body %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+5. buka portfolios_controller.rb tambahkan instance variable portfolio untuk method new :
+@portfolio_item = Portfolio.new
+
+sehingga :
+
+def new
+ @portfolio_item = Portfolio.new
+end
+
+# tahap ini kita membuat get form untuk nanti diinput pada saat post save
+
+6. buka portfolios_controller.rb
+tambahkan method post create:
+
+	def create
+	@portfolio_item = Portfolio.new(params.require(:portfolio).permit(:title, :subtitle, :body))  #pakai params.require(:portfolio).permit(:title, :subtitle, :body) supaya aman 
+	
+	respond_to do |format|
+      if @portfolio_item.save 
+      	format.html { redirect_to portfolios_path, notice: 'Portfolio was successfully created.' } #portolios_path dari routes prefix
+      else
+      	format.html { render :new }
+      end
+  end
+end
+
+7. pada views/portfolios/index.html.erb matikan dulu line ini :
+<%#= image_tag portfolio_item.thumb_image %>
+
+atau ubah menjadi jika gambar nul/kosong:
+<%= image_tag portfolio_item.thumb_image if !portfolio_item.thumb_image.nil? %>
+
+<%= image_tag portfolio_item.thumb_image unless portfolio_item.thumb_image.nil? %> # sama aja dengan pakai if
