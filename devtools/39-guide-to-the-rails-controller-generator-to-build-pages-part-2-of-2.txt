@@ -1,3 +1,10 @@
 REFF:
 ================
-1.
+1. Buat project di github
+git init
+git add README.md
+git commit -m "controller generator"
+git remote add origin git@github.com:danigunawan/prorails5devcourse.git
+git push origin controller-generator
+
+2.
