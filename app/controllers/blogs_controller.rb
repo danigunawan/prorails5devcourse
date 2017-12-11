@@ -62,6 +62,7 @@ class BlogsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    # Callback function adalah function yang dibuat dan dieksekusi didalam function lain (function yang memanggilnya)
     def set_blog
       @blog = Blog.find(params[:id])
     end

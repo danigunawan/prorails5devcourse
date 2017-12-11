@@ -103,3 +103,8 @@ atau ubah menjadi jika gambar nul/kosong:
 <%= image_tag portfolio_item.thumb_image if !portfolio_item.thumb_image.nil? %>
 
 <%= image_tag portfolio_item.thumb_image unless portfolio_item.thumb_image.nil? %> # sama aja dengan pakai if
+
+8. git status
+git add .
+git commit -m "integrated new and create action for portfolios"
+git push origin portfolio-feature

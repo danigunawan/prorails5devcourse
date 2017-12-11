@@ -1,0 +1,56 @@
+REFF:
+==============
+disini kita akan membuat fungsi edit dari bagian crud pada model portfolios.
+
+1. buka controller portfolios_controllers.erb
+
+tambahkan :
+
+def edit
+ @portfolio_item = Portfolio.find(params[:id])	
+end
+
+2. buat file edit.html.erb view untuk edit views/portfolios/edit.html.erb
+
+isikan : 
+
+<h1>Edit this portfolio item</h1>
+<%= form_for(@portfolio_item) do |f| %>
+
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subtitle %>
+    <%= f.text_area :subtitle %>
+  </div>
+
+    <div class="field">
+    <%= f.label :body %>
+    <%= f.text_area :body %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+3. sebelum edit kita kita cek query dulu
+cek query last dulu :
+
+- rails c
+
+- Portfolio.last # melihat query id terakhir
+- Portfolio.find(5) #cek query mencari id:
+
+
+4. coba akses localhost:3000/portfolios/5/edit # didapat dari url prefix rake routes
+
+5. Buat Post Update edit
+buka controllers portfolios_controller.erb
+
+
+
