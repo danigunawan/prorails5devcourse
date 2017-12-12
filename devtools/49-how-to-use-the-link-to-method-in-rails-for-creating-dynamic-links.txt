@@ -1,0 +1,50 @@
+REFF:
+==============
+1. rails routes | grep portfolio
+
+? rails routes | grep portfolio
+    portfolios GET    /portfolios(.:format)          portfolios#index
+               POST   /portfolios(.:format)          portfolios#create
+ new_portfolio GET    /portfolios/new(.:format)      portfolios#new
+edit_portfolio GET    /portfolios/:id/edit(.:format) portfolios#edit
+     portfolio GET    /portfolios/:id(.:format)      portfolios#show
+               PATCH  /portfolios/:id(.:format)      portfolios#update
+               PUT    /portfolios/:id(.:format)      portfolios#update
+               DELETE /portfolios/:id(.:format)      portfolios#destroy
+
+2. Contoh Membuat link dinamis :
+# membuat link get create form :
+
+- Cara Create 1 :
+<a href="portfolios/new">Create New Item</a> # seperti url pada <%= new_portfolio_path %> hanya portfolios/new
+
+- Cara Create 2 dengan prefix path url :
+<%= link_to "Create New Item", new_portfolio_path %> # beserta url lengkapnya http://localhost:3000/portfolios/new
+
+- Link dengan subdomain
+<%= link_to "Create New Item", new_portfolio_url, subdomain: 'my subdomain' %>
+
+- Cara Edit 1 :
+<%= link_to "Edit", edit_portfolio_path(portfolio_item.id) %>
+
+- Cara Edit 2 :
+<a href="/portfolios/<%= portfolio_item.id%>/edit">Edit Two</a>
+
+
+3. buka portfolios/index.html
+
+tambahkan :
+<%= link_to "Create New Item", new_portfolio_url %> 
+
+dan untuk edit by id :
+
+# cara 1 Edit
+<%= link_to "Edit", edit_portfolio_path(portfolio_item.id) %>
+
+# Cara 2 Edit
+<a href="/portfolios/<%= portfolio_item.id%>/edit">Edit Two</a>
+
+3. git status
+git add .
+git commit -m "added new and edit buttons for portfolios items"
+git push origin portfolio-feature
