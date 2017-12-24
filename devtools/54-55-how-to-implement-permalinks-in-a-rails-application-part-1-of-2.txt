@@ -1,0 +1,88 @@
+REFF:
+https://github.com/norman/friendly_id
+========================
+cara membuat url permalinks agar url yang diakses cantik atau SEO URL misal http://localhost:3000/portfolios/3 menjadi http://localhost:3000/portfolios/belirujak 
+
+1. buka GEMFILE, tambahkan : 
+
+gem 'friendly_id', '~> 5.1.0' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
+
+
+2. bundle install
+
+3. rails generate friendly_id
+
+4. rails db:migrate
+
+# jika error
+ 
+Directly inheriting from ActiveRecord::Migration is not supported. Please specif
+y the Rails release the migration was written for
+
+
+solusi buka file migrasi 20171224131142_create_friendly_id_slugs.rb :
+tambahkan versi activerecord :
+
+dari :
+
+class CreateFriendlyIdSlugs < ActiveRecord::Migration
+
+menjadi :
+
+class CreateFriendlyIdSlugs < ActiveRecord::Migration[5.1]
+
+
+5. membuat migration untuk menambahkan field slug dengan index unique ke model/table blogs
+rails g migration add_slug_to_blogs slug:string:uniq
+
+6. rails db:migrate
+
+7. buka model blog.rb tambahkan code berdasarkan reff https://github.com/norman/friendly_id:
+
+extend FriendlyId
+friendly_id :name, use: :slugged
+
+sehingga : 
+
+class Blog < ApplicationRecord
+	extend FriendlyId
+	friendly_id :title, use: :slugged
+end
+
+8. insert data blog
+- rails c
+- Blog.create!(title: "My great title", body: "asdfasd")
+
+9. buka blogs_controller.rb
+
+tambahkan pada instance object Blog untuk ORM relasi friendly tadi.
+
+dari : 
+ 
+ private
+   
+   def set_blog
+      @blog = Blog.find(params[:id])
+    end
+
+menjadi : 
+
+private
+   
+   def set_blog
+      @blog = Blog.friendly.find(params[:id])
+   end
+
+10. rails c
+Blog.first
+Blog.find_each(&:save)
+
+11. rails s
+coba akses : http://localhost:3000/blogs/
+
+permalinksnya : http://localhost:3000/blogs/my-blog-post-0
+
+12. git status
+git add .
+git commit -m "Integrated Friendly Routes For Blog Posts"
+git push origin portfolio-feature

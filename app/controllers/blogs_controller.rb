@@ -1,5 +1,5 @@
 class BlogsController < ApplicationController
-  before_action :set_blog, only: [:show, :edit, :update, :destroy]
+  before_action :set_blog, only: [:show, :edit, :update, :destroy] # sebelum aksi show edit update destroy memanggil call back dulu yakni set_blog
 
   # GET /blogs
   # GET /blogs.json
@@ -64,7 +64,7 @@ class BlogsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     # Callback function adalah function yang dibuat dan dieksekusi didalam function lain (function yang memanggilnya)
     def set_blog
-      @blog = Blog.find(params[:id])
+      @blog = Blog.friendly.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
