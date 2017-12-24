@@ -16,7 +16,7 @@ class PortfoliosController < ApplicationController
 	respond_to do |format|
 		if @portfolio_item.save 
       	format.html { redirect_to portfolios_path, notice: 'Portfolio was successfully created.' } #portolios_path dari routes prefix
-     	format.json { render :show, status: :ok, location: @portfolio_item }
+      	format.json { render :show, status: :ok, location: @portfolio_item }
       else
       	format.html { render :new }
       	format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
@@ -45,4 +45,16 @@ def show
 	@portfolio_item = Portfolio.find(params[:id])
 end
 
+def destroy
+	# perform the lookup
+	@portfolio_item = Portfolio.find(params[:id])
+
+	# destroy/delete  the record
+	@portfolio_item.destroy
+
+	#redirect
+	respond_to do |format|
+		format.html { redirect_to portfolios_url, notice: 'Record was removed.' }
+	end
+end
 end

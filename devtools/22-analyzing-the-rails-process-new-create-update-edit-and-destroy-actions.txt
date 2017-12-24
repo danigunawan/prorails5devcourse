@@ -68,6 +68,3 @@ ini adalah bagian keselurahan form render yang digunakan oleh method create edit
     <%= form.submit %>
   </div>
 <% end %>
-
-
-

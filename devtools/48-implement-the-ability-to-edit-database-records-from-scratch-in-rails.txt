@@ -1,6 +1,6 @@
 REFF:
 ==============
-disini kita akan membuat fungsi edit dari bagian crud pada model portfolios.
+# CONTOH EDIT, disini kita akan membuat fungsi edit dari bagian crud pada model portfolios.
 
 1. buka controller portfolios_controllers.erb
 

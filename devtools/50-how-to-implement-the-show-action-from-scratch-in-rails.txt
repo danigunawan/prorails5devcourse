@@ -2,7 +2,7 @@ REFF:
 ============
 kita disini mengimplementasi show action halaman
 
-# membuat halaman show
+# contoh SELECT active recortd membuat halaman show
 1.buka portfolios_controller 
 tambahkan :
 
@@ -27,4 +27,6 @@ menjadi :
  
 <p><%= link_to portfolio_item.title, portfolio_path(portfolio_item.id) %></p> # portfolio_path(portfolio_item.id) ini mengambil path prefix beserta object idnya
 
-4. 
+4. git add .
+git commit -m "implemented show functionality for portfolio module"
+git push origin portfolio-feature
