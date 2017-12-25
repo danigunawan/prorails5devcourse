@@ -1,0 +1,83 @@
+REFF :
+==========================
+
+1. rails g model Topic title:string
+2. rails db:migrate
+3. buat validasi untuk model Topic :
+- buka model Topic.rb
+- tambahkan 
+
+validates_presence_of :title
+
+sehingga : 
+
+class Topic < ApplicationRecord
+	validates_presence_of :title
+end
+
+4. Design Data Relationships
+
+Blogs:
+title: Baseball world series, topic_id: 1
+Superbowl, topic_id: 2
+Spring trainingm topic_id: 1
+
+Topics:
+1 baseball
+2 football
+
+# jadi Topic punya banyak Blog
+
+- topic punya banyak blog : has_many :blogs # has_many :blogs ini bagian dari tabel pada blog yang memiliki PK
+- blogs bagian dari topic : belongs_to :topic # belongsTo -> digunain ditable penyambung (yang punya foreign key) 
+
+5. menambahkan kolom/field topic_id sebagai FK pada table blog dimana id PK referensi nya dari table topic
+rails g migration add_topic_reference_to_blogs topic:references
+
+6. rails db:migrate
+
+7. buka model topic.rb, karena topic punya banyak blog maka tambahkan :
+
+has_many :blogs
+
+sehingga :
+
+class Topic < ApplicationRecord
+	validates_presence_of :title
+
+	has_many :blogs
+end
+
+
+8. buka model blog.rb, karena blog merupakan bagian dari topic/ yg digunain ditable penyambung (yang punya foreign key) maka tambahkan :
+
+belongs_to :topic
+
+sehingga :
+
+class Blog < ApplicationRecord
+	enum status: { draft: 0, published: 1 }
+	extend FriendlyId
+	friendly_id :title, use: :slugged
+
+	validates_presence_of :title, :body
+
+	belongs_to :topic
+end
+
+
+9. coba insert data ke model topic
+- rails c
+
+# Insert data ke model Topic
+- Topic.create!(title: "Ruby Programming")
+- Topic.all # tampilkan seluruh data topic
+
+# Insert data ke model Blog dengan referensi topic_id dari tabel topic yang pertama kali dibuat (first id)
+- Blog.create!(title: "Some Cool Ruby Stuff", body: 'asdfasdf', topic_id: Topic.first.id)
+- t = Topic.first # instance object
+- t.blogs # menampilkan data yang berelasi antara topic dan blog
+- Blog.last.topic # menampilkan data blog yang berelasi dengan topic dengan kondisi terakhir kali di insert
+- exit () # keluar
+
+10. git status
