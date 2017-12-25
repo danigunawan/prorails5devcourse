@@ -1,0 +1,16 @@
+REFF: 
+https://github.com/danigunawan/prorails5devcourse/
+==========================
+
+update manajemen proyek dan membuat sebuah pull request 
+1. https://github.com/danigunawan/prorails5devcourse/branches
+
+2. pilih new pull request pada branch portfolio-feature 
+
+isikan data dokumentasi selama push :
+
+- updated the app to have sample data
+- implemented the full crud functionality for portfolio items
+- added buttons for crud
+- implemented custom routes
+- implemented customs items

@@ -1,5 +1,5 @@
 class BlogsController < ApplicationController
-  before_action :set_blog, only: [:show, :edit, :update, :destroy] # sebelum aksi show edit update destroy memanggil call back dulu yakni set_blog
+  before_action :set_blog, only: [:show, :edit, :update, :destroy, :toggle_status] # sebelum aksi show edit update destroy memanggil call back dulu yakni set_blog
 
   # GET /blogs
   # GET /blogs.json
@@ -58,6 +58,16 @@ class BlogsController < ApplicationController
       format.html { redirect_to blogs_url, notice: 'Blog was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def toggle_status
+    # byebug
+    if @blog.draft? # akan berganti status publish ketika masih status draft
+      @blog.published! 
+    else @blog.published? # akan berganti status draft ketika masih status publish
+      @blog.draft!
+    end
+    redirect_to blogs_url, notice: 'Post Status has been updated.'
   end
 
   private

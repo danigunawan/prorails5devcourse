@@ -1,0 +1,133 @@
+REFF :
+=====================
+
+pada tahapan ini akan membuat button toggle status update draft 0 atau published 1 saat diclick pada button link list blog.
+
+1. rails c
+Blog.last.draft?
+Blog.last.published?
+
+2. buka views/blogs/index.html.erb
+
+- ubah colspan :
+
+<th colspan="4"></th>
+
+- tambahkan :
+
+<td><%= blog.status %></td>
+
+- membuat link dengan title blog.status
+
+<td><%= link_to blog.status, root_path %></td>
+
+3. buka routes.rb
+
+kita akan membuat fungsi get utk manipulasi data status dari toggle saat di click pada object blog resources
+dan membuat method member yang memiliki fungsi get toggle_status path prefix utk link button nanti saat action akan
+merubah status draft dan published. langkah2 :
+- ubah :
+
+resources :blogs
+
+
+- menjadi :
+
+ resources :blogs do
+  	member do
+  		get:toggle_status
+  	end
+  end
+
+
+- cek route
+
+? rake routes | grep blog.
+
+toggle_status_blog GET   /blogs/:id/toggle_status(.:format) blogs#toggle_status
+
+             blogs GET    /blogs(.:format)                   blogs#index
+                   POST   /blogs(.:format)                   blogs#create
+          new_blog GET    /blogs/new(.:format)               blogs#new
+         edit_blog GET    /blogs/:id/edit(.:format)          blogs#edit
+              blog GET    /blogs/:id(.:format)               blogs#show
+                   PATCH  /blogs/:id(.:format)               blogs#update
+                   PUT    /blogs/:id(.:format)               blogs#update
+                   DELETE /blogs/:id(.:format)               blogs#destroy
+
+
+# kita sudah membuat fungsi action toggle_status_blog
+toggle_status_blog POST   /blogs/:id/toggle_status(.:format) blogs#toggle_status
+
+
+4. buka views/blog/index.html.erb
+
+- ubah :
+<td><%= link_to blog.status, root_path %></td>
+
+- menjadi :
+
+<td><%= link_to blog.status, toggle_status_blog_path(blog) %></td>
+
+
+5. buka controller blog_controller.rb
+
+tambahkan method toggle_status_blog setelah method destroy :
+
+
+ def toggle_status
+    byebug
+    redirect_to blogs_url
+  end
+
+
+6. rails s
+
+- klik draft
+- jika muncul diterminal byebug, masukan :
+
+blog = Blog.friendly.find(params[:id])
+blog.published! 
+
+KET :
+
+# fungsi blog = Blog.friendly.find(params[:id]) merupakan fungsi untuk mencari object yang memiliki permalinks utk mencari parameter id
+# fungsi blog.published! adalah merubah object berdasarkan parameter id tersebut yang dipilih saat button diklik menjadi 1 atau published
+
+# fungsi byebug ini merupakan sebuah paket untuk mendebug saat setelah action button di eksekusi pada method :
+
+ def toggle_status
+    byebug
+    redirect_to blogs_url
+  end
+
+
+# byebug ini merupakan sebuah paket untuk mendebug saat setelah action button di eksekusi pada method :
+
+ def toggle_status
+    byebug
+    redirect_to blogs_url
+  end
+
+7. buka blog_controller.rb
+
+- tambahkan toggle_status pada callback before_action :
+
+before_action :set_blog, only: [:show, :edit, :update, :destroy] 
+
+menjadi :
+
+before_action :set_blog, only: [:show, :edit, :update, :destroy, :toggle_status] 
+
+- ubah method toggle_status menjadi :
+
+  def toggle_status
+    # byebug # ini digunakan untuk debug diterminal untuk aksi object saat setelah action button status dklik
+    if @blog.draft? # akan berganti status publish ketika masih status draft
+      @blog.published! 
+    elseif @blog.published? # akan berganti status draft ketika masih status publish
+      @blog.draft!
+    end
+    redirect_to blogs_url, notice: 'Post Status has been updated.'
+  end
+

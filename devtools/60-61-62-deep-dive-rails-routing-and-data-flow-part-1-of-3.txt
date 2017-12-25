@@ -1,0 +1,268 @@
+REFF :
+https://stackoverflow.com/questions/32478853/rails-new-t-option-does-it-create-an-app-without-tests
+https://rails.devcamp.com/trails/
+command :
+
+help ruby rails : 
+
+rails -h
+
+help test unit :
+rails test -h
+
+############ PART 60 #################################
+1. rails new RoutingApp -T --database=postgresql 
+
+# -T ini adalah membuat project tanpa ada test unitnya
+
+# test unit component :
+test/controllers
+test/fixtures
+test/helpers
+test/integration
+test/mailers
+test/models
+test_helper.rb
+
+2. rails g scaffold Blog title:string body:text
+
+3. buka submlime text
+subl .
+
+4. membuat controller Pages beserta method about dan contact
+rails g controller Pages about contact
+
+5. buka routes.rb
+ubah:
+
+Rails.application.routes.draw do
+  get 'pages/about'
+
+  get 'pages/contact'
+
+  resources :blogs
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+end
+
+
+menjadi:
+
+Rails.application.routes.draw do
+  #cara 1
+  get 'about', to: 'pages#about'
+  
+  #cara 2
+  #get 'leadgen/advertising/asdf/lead', to: 'pages#contact', as: 'lead' 
+  # jika pakai as ini pada link_to hanya mengambil alias/as saja bukan leadgen/advertising/asdf/lead_path tetapi <%= link_to "Lead Page", lead_path %>
+  
+  get 'contact', to: 'pages#contact'
+
+  resources :blogs
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+end
+
+
+6. buat akun database postgresql (NAVICAT)
+- login superuser
+- buat role user khusus untuk database 
+New Role :
+# Role Name : prorails5
+# Can Login : Centang
+# Password : prorails5 / Re-Password : prorails5
+# Password Encryption : Encrypted
+# Connection Limit : -1
+# Expiry Date : kosongkan
+# Fitur : (Inherit Privileges) Selain itu jangan dicentang
+
+
+7. buka database.yml
+
+tambahkan pada setingan :
+  
+  username: prorails5
+  password: prorails5
+  host: localhost
+
+sehingga : 
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: prorails5
+  password: prorails5
+  host: localhost 
+
+8. rails db:create
+9. buka views/page/about.html.erb
+tambahkan :
+
+<%= link_to "Lead Page", contact_path %>
+
+9.rails s
+
+#### PART 61 ####
+
+10. tambahkan home.html.erb pada views/pages/home.html.erb
+
+11. buka routes.rb
+tambahkan :
+
+  root to: 'pages#home'
+
+12. rails g controller Dashboard main user blog
+
+13. buka routes.rb
+disana akan ada routes baru hasil dari rails g controller Dashboard main user blog
+yaitu :
+
+  get 'dashboard/main'
+  get 'dashboard/user'
+  get 'dashboard/blog'
+
+# karena sebelumnya dashboard hanya bisa diakses melalui localhost:3000/dashboard/main saat ini
+kita ingin 3 routes itu diakses dari localhost:3000/admin/dashboard/main atau user atau blog
+
+langkah :
+
+- tambahkan namespace admin, sehingga seperti dibawah ini:
+
+namespace :admin do
+  get 'dashboard/main'
+  get 'dashboard/user'
+  get 'dashboard/blog'
+end
+
+14. buat folder admin di controller
+
+15. drag/pindahkan dashboard_controller.rb ke folder controller/admin
+
+16. buka dashboard_controller.rb
+tambahkan pada class DashboardController < ApplicationController sebuah 
+scope resolution ::Admin untuk akses static/constanct dan ovveride sebuah properties
+atau method dari class agar bisa mengakses fungsi namespace admin tadi pada routes.
+
+sehingga :
+
+class Admin::DashboardController < ApplicationController
+  def main
+  end
+
+  def user
+  end
+
+  def blog
+  end
+end
+
+16. tambahkan folder admin di views lalu drag folder dashboard di views ke folder
+admin.
+
+17. membuat resources posts from scratch
+
+- buka routes.rb tambahkan :
+resources :posts
+
+- buat file post_controller.rb  di controllers/post_controller.rb 
+isikan :
+
+class PostsController < ApplicationController
+
+	def index
+	end
+
+end
+
+- buat folder posts di views
+- tambahkan index.html.erb di views/posts/index.html.erb
+isikan index.html.erb :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Posts</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h1>Here are the posts</h1>
+</body>
+</html>
+
+######## PART 62 #############
+
+18. buka routes.rb
+
+disini kita akan membuat route missing/globbing jadi ketika 
+ada group item/group routes lainnya tidak memiliki resources baik itu method/class
+maupun routes maka ketika diakses akan missing. contoh dibawah ini adalah pada resources posts.
+
+- pada routes.rb tambahkan :
+
+get 'posts/*missing', to: 'posts#missing'
+
+- buka posts_controller.rb tambahkan :
+
+def missing
+end
+
+- tambahkan missing.html.erb di folder views/posts/
+isikan :
+
+<h1>THERE ARE NOT THE POSTSS YOU WERE LOOKING FOR.. </h1>
+
+- coba akses yang tidak ada route : localhost:3000/posts/asdsadasdasdas/
+saat diakses maka dia akan memunculkan notif missing
+
+19. buka posts_controller.rb
+
+- tambahkan method :
+
+def new
+end
+
+- buat file new.html.erb di views/posts/
+
+- cek kembali 
+pastikan get 'posts/*missing', to: 'posts#missing' di taruh dibawah resources :posts
+
+20. membuat custom routing dinamis url CARA 1
+- buka routes.rb tambahkan : 
+get 'query/:else', to: 'pages#something'
+
+- buka pages_controller.rb tambahkan method something : 
+
+def something 
+@else = params[:else]
+end 
+
+- tambahkan file something.html.erb di views/pages/
+isikan :
+<h1><%= @else %></h1>
+
+- coba akses : localhost:3000/query/ada
+hasilnya : ada # dari page passing instance variable<h1><%= @else %></h1> 
+
+
+# dinamis cara 2 dengan 2 parameter instance variable
+
+- buka routes.rb tambahkan : 
+get 'query/:else/:another_one', to: 'pages#something'
+
+- buka pages_controller.rb tambahkan method something : 
+
+def something 
+@else = params[:else]
+@another_one = params[:another_one]
+end 
+
+- tambahkan file something.html.erb di views/pages/
+isikan :
+<h1><%= @else %></h1>
+<h1><%= @another_one %></h1>
+
+- coba akses : localhost:3000/query/ada/iyakok
+hasilnya : 
+ada 
+iyakok
+# dari page passing instance variable<h1><%= @else %></h1> dan <h1><%= @another_one %></h1>
