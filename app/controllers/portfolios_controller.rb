@@ -1,6 +1,13 @@
 class PortfoliosController < ApplicationController
 	def index
 		@portfolio_items = Portfolio.all
+		# @portfolio_items = Portfolio.where(subtitle: 'Ruby On Rails')
+		# @portfolio_items = Portfolio.angular # dari method self.angular dari model portfolio.rb
+		# @portfolio_items = Portfolio.ruby_on_rails_portfolio_items # dari scope dari model portfolio.rb
+	end
+
+	def angular
+		@angular_portfolio_items = Portfolio.angular # dari method self.angular di model portfolio.rb 
 	end
 
 	def show

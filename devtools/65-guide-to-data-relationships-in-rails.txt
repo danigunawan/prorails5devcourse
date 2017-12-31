@@ -81,3 +81,6 @@ end
 - exit () # keluar
 
 10. git status
+git add .
+git commit -m "Integrated database relationshop betweeen topics and blog posts"
+git push origin data-feature
