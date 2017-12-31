@@ -1,0 +1,150 @@
+REFF:
+=============
+
+concerns ini digunakan untuk template generator pada object seperti
+gambar jadi ketika di insert akan menggunakan template concerns dengan
+ukuran gambar yang dinamis yang disesuaikan.
+
+1. buat migrasi untuk tambah field badge ke table skills
+
+rails g migration add_badge_to_skills badge:text
+
+2. rails db:migrate
+
+3. buka model skill.rb di models/skill.rb
+
+tambahkan set_defaults value : 
+
+	after_initialize :set_defaults
+
+	def set_defaults
+		self.badge ||= "http://placehold.it/250x250" 
+		# diatas ||= ini sama dengan if else yang dibawah
+			# if self.badge == nil
+			# 	self.badge = "http://placehold.it/250x250" 
+			# end
+	end
+
+
+
+sehingga : 
+
+class Skill < ApplicationRecord
+	validates_presence_of :title, :percent_utilized
+
+	after_initialize :set_defaults
+
+	def set_defaults
+		self.badge ||= "http://placehold.it/250x250" 
+		# diatas ||= ini sama dengan if else yang dibawah
+			# if self.badge == nil
+			# 	self.badge = "http://placehold.it/250x250" 
+			# end
+	end
+end
+
+
+4. buat placeholder.rb di folder concerns/placeholder.rb
+isikan : 
+
+module Placeholder
+	extend ActiveSupport::Concern
+	
+	def self.image_generator(height:, width:)
+	"http://placehold.it/#{height}x#{width}"
+	end
+end
+
+5. kita akan terapkan concerns pada model skill.rb di models/skill.rb
+jadi object gambar yang akan insert secara default pada after_initialize akan
+menggunakan concerns placeholder sebagai template defaultnya.
+
+- tambahkan pada class Skill : 
+
+include Placeholder
+
+- sehingga menjadi : 
+
+class Skill < ApplicationRecord
+	include Placeholder
+	validates_presence_of :title, :percent_utilized
+
+	after_initialize :set_defaults
+
+	def set_defaults
+		#jika tidak menggunakan template placeholder pada concerns
+
+		# self.badge ||= "http://placehold.it/250x250" 
+		# diatas ||= ini sama dengan if else yang dibawah
+			# if self.badge == nil
+			# 	self.badge = "http://placehold.it/250x250" 
+			# end
+
+		#jika menggunakan template placeholder pada concerns
+		self.badge ||= Placeholder.image_generator(height: '250', width: '250')
+	end
+end
+
+6. kita akan terapkan juga concerns placeholder pada model portfolio.rb
+
+- buka model portfolio.rb
+
+tambahkan : 
+
+includes Placeholder
+
+- sehingga menjadi : 
+
+class Portfolio < ApplicationRecord
+	includes Placeholder
+	validates_presence_of :title, :subtitle, :body, :main_image, :thumb_image
+	
+	def self.angular
+		where(subtitle: 'Angular')
+	end
+
+	scope :ruby_on_rails_portfolio_items, -> { where(subtitle: 'Ruby On Rails') }
+
+	after_initialize :set_defaults
+
+	def set_defaults
+		
+		## Jika menggunakan template concerns placeholder atau cara normalnya 
+		#self.main_image ||= "http://placehold.it/600x400" 
+		# diatas ||= ini sama dengan if else yang dibawah
+			# if self.main_image == nil
+			# 	self.main_image = "http://placehold.it/600x400"
+			# end
+		#self.thumb_image ||= "http://placehold.it/350x200"
+			# diatas ||= ini sama dengan if else yang dibawah
+			# if self.thumb_image == nil
+			# 	self.thumb_image = "http://placehold.it/350x200"
+			# end
+
+		## Jika menggunakan cara concerns placeholder templatenya
+		self.main_image ||= Placeholder.image_generator(height: '600', width: '400')
+		self.thumb_image ||= Placeholder.image_generator(height: '350', width: '200')
+	end
+
+
+
+	
+
+end
+
+
+7. rails s
+coba insert data
+
+pastikan berhasil menggunakan concerns dan gambar tampil sesuai generate concerns
+
+8. kita coba create data Skill melalui rails command
+- rails c
+- Skill.create!(title: "Some Skill", percent_utilized: 80)
+- coba lihat didataabse pastikan field badge sudah ada nilainya : http://placehold.it/250x250
+
+
+9. git status
+git add .
+git commit -m "implemented concern for managing image data"
+git push origin data-feature
