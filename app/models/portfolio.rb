@@ -1,4 +1,5 @@
 class Portfolio < ApplicationRecord
+	has_many :technologies # technologies ambil dari nama table
 	include Placeholder
 	validates_presence_of :title, :subtitle, :body, :main_image, :thumb_image
 	
