@@ -70,6 +70,8 @@ p.technologies # select technologies dengan id portfolio teraklhir
 ## jika mau setup jangan lupa matikan dulu di seed.rb
 ## dan semua fk semua table di clear / dihapus dlu pada database professional-rails-lima-development-course_development dan professional-rails-lima-development-course_test pada 
 
+# matikan : 
+
 # 3.times do |technology|
 # 	Technology.create!(
 # 		name: "Technology #{technology}",
