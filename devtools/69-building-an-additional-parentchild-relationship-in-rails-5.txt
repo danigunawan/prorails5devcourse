@@ -100,3 +100,5 @@ Portfolio.last.technologies.count # menghitung jumlah data technologi milik si p
 
 10. git status
 git add .
+git commit -m "Integrated technologies model"
+git push origin data-feature
