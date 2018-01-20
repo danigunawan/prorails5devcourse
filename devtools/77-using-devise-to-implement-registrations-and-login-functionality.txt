@@ -193,7 +193,8 @@ menjadi :
 
 Ket : # skip_before_filter has been deprecated in Rails 5.0 and removed in 5.1.
 
-- coba daftar kembali
+- coba daftar kembali pastikan tidak error
+
 
 9. rails c
 

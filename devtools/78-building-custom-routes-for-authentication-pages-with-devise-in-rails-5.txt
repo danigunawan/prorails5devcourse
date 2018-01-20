@@ -1,0 +1,24 @@
+REFF:
+================
+custom routes untuk autentikasi devise
+
+1. buka config/routes.rb
+- ubah : 
+
+devise_for :users
+
+- menjadi : 
+
+devise_for :users, path: '', path_names: {sign_in: 'login', sign_out: 'logout', sign_up: 'register'}
+
+- sehingga link autentikasi 
+# localhost:3000/users/sign_in menjadi localhost:3000/login
+# localhost:3000/users/sign_up menjadi localhost:3000/register
+# localhost:3000/users/sign_out menjadi localhost:3000/logout 
+
+- cek rake routes
+
+2. git status
+git add .
+git commit -m "customized registration, login, and logout routes"
+git push origin authentication
