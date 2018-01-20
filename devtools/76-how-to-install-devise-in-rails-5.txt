@@ -1,5 +1,6 @@
 REFF:
 https://rubygems.org/gems/devise
+https://github.com/plataformatec/devise
 ==================
 prepare :
 subl .
