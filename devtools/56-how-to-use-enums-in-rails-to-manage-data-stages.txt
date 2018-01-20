@@ -1,0 +1,66 @@
+REFF:
+=====================
+
+membuat / custom migrasi untuk tipe data enum pada status
+
+1. menambahkan field status ke model blogs atau table blogs untuk membuat tipe data enum ada 0 dan 1 
+rails g migration add_post_status_to_blogs status:integer
+
+2. buka migrasi 20171225021753_add_post_status_to_blogs.rb
+
+kita akan custom migrasi menjadi enum.
+
+- ubah:
+
+add_column :blogs, :status, :integer
+
+- menjadi :
+
+add_column :blogs, :status, :integer, default: 0
+
+3. rails db:migrate
+
+4. buka model blog.rb
+
+- tambahkan :
+
+enum status: { draft: 0, published: 1 } 
+
+- sehingga :
+class Blog < ApplicationRecord
+	enum status: { draft: 0, published: 1 }
+	extend FriendlyId
+	friendly_id :title, use: :slugged
+end
+
+# fungsi enum status: { draft: 0, published: 1 } 
+adalah ketika saat pertama create akan ada kondisi draft 0 dan ketika publish akan 1
+
+5. rails c
+Blog.create!(title: "asdfads", body: "asdfads")
+
+# lihat yang di create terakhir
+Blog.last
+
+# ubah status pada object terakhir yang dicreate tadi menjadi publish / 1
+Blog.last.published!
+
+# cek lagi object terakhir dipastikan berubah status menjadi publish / 1 atau bisa cek database table blog
+Blog.last
+
+# Cek semua object blog yang memiliki status published/1
+Blog.published
+
+# MENGHITUNG jumlah object blog yang terpublish/1
+Blog.published.count
+
+# mengubah object yang pertama kali dibuat menjadi published / 1
+Blog.first.published!
+
+# Menampilkan seluruh isi object Blog
+Blog.all
+
+6. git status
+git add .
+git commit -m "updated status for enum"
+git push origin portfolio-feature 

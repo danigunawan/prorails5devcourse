@@ -1,0 +1,142 @@
+REFF:
+=================
+
+cara override/menimpa/mengubah/custom routing yang sudah ada pada rails misal punya resources portfolio dengan isi (index,create,update,delete)
+
+saat kita akses : http://localhost:3000/portfolios/3 kita ingin mengubah menjadi http://localhost:3000/portfolio/3 atau http://localhost:3000/karyaku/3
+
+dengan mengubah nama prefix path/URI pattern pada method dan memberi alias prefix
+
+CEK ROUTES :
+
+? rails routes
+        Prefix Verb   URI Pattern                    Controller#Action
+    portfolios GET    /portfolios(.:format)          portfolios#index
+               POST   /portfolios(.:format)          portfolios#create
+ new_portfolio GET    /portfolios/new(.:format)      portfolios#new
+edit_portfolio GET    /portfolios/:id/edit(.:format) portfolios#edit
+     portfolio GET    /portfolios/:id(.:format)      portfolios#show
+               PATCH  /portfolios/:id(.:format)      portfolios#update
+               PUT    /portfolios/:id(.:format)      portfolios#update
+               DELETE /portfolios/:id(.:format)      portfolios#destroy
+    pages_home GET    /pages/home(.:format)          pages#home
+   pages_about GET    /pages/about(.:format)         pages#about
+ pages_contact GET    /pages/contact(.:format)       pages#contact
+         blogs GET    /blogs(.:format)               blogs#index
+               POST   /blogs(.:format)               blogs#create
+      new_blog GET    /blogs/new(.:format)           blogs#new
+     edit_blog GET    /blogs/:id/edit(.:format)      blogs#edit
+          blog GET    /blogs/:id(.:format)           blogs#show
+               PATCH  /blogs/:id(.:format)           blogs#update
+               PUT    /blogs/:id(.:format)           blogs#update
+               DELETE /blogs/:id(.:format)           blogs#destroy
+
+
+kita akan ovveride pada routing resources portfolios untuk method show :
+
+portfolio GET    /portfolios/:id(.:format)      portfolios#show
+
+1. buka routes.rb
+
+pada :
+
+  resources :portfolios 
+
+ubah menjadi :
+
+  resources :portfolios, except: [:show]
+  get 'portfolio/:id', to: 'portfolios#show'
+
+
+2. cek routes setelah kita ovveride
+
+? rake routes
+        Prefix Verb   URI Pattern                    Controller#Action
+    portfolios GET    /portfolios(.:format)          portfolios#index
+               POST   /portfolios(.:format)          portfolios#create
+ new_portfolio GET    /portfolios/new(.:format)      portfolios#new
+edit_portfolio GET    /portfolios/:id/edit(.:format) portfolios#edit
+     portfolio PATCH  /portfolios/:id(.:format)      portfolios#update
+               PUT    /portfolios/:id(.:format)      portfolios#update
+               DELETE /portfolios/:id(.:format)      portfolios#destroy
+               GET    /portfolio/:id(.:format)       portfolios#show
+         about GET    /about(.:format)               pages#about
+       contact GET    /contact(.:format)             pages#about
+         blogs GET    /blogs(.:format)               blogs#index
+               POST   /blogs(.:format)               blogs#create
+      new_blog GET    /blogs/new(.:format)           blogs#new
+     edit_blog GET    /blogs/:id/edit(.:format)      blogs#edit
+          blog GET    /blogs/:id(.:format)           blogs#show
+               PATCH  /blogs/:id(.:format)           blogs#update
+               PUT    /blogs/:id(.:format)           blogs#update
+               DELETE /blogs/:id(.:format)           blogs#destroy
+          root GET    /                              pages#home
+
+# terlihat method show yang awalnya :
+
+portfolio GET    /portfolios/:id(.:format)      portfolios#show
+
+berubah menjadi :
+
+	  GET    /portfolio/:id(.:format)       portfolios#show
+
+
+
+3. jika pada sebelumnya sudah memiliki prefix portfolio, namun pada ovveride yang dibuat belum 
+kita tambahkan alias untuk path url prefix method show pada ovveride routing tersebut, untuk membuatnya :
+
+- buka routes.rb
+
+ubah :
+
+ get 'portfolio/:id', to: 'portfolios#show'
+
+menjadi :
+
+ get 'portfolio/:id', to: 'portfolios#show', as: 'portfolio_show' 
+
+4. cek routes kembali setelah kita berhasil menambahkan prefix pada ovveride tadi
+
+? rake routes
+        Prefix Verb   URI Pattern                    Controller#Action
+    portfolios GET    /portfolios(.:format)          portfolios#index
+               POST   /portfolios(.:format)          portfolios#create
+ new_portfolio GET    /portfolios/new(.:format)      portfolios#new
+edit_portfolio GET    /portfolios/:id/edit(.:format) portfolios#edit
+     portfolio PATCH  /portfolios/:id(.:format)      portfolios#update
+               PUT    /portfolios/:id(.:format)      portfolios#update
+               DELETE /portfolios/:id(.:format)      portfolios#destroy
+portfolio_show GET    /portfolio/:id(.:format)       portfolios#show
+         about GET    /about(.:format)               pages#about
+       contact GET    /contact(.:format)             pages#about
+         blogs GET    /blogs(.:format)               blogs#index
+               POST   /blogs(.:format)               blogs#create
+      new_blog GET    /blogs/new(.:format)           blogs#new
+     edit_blog GET    /blogs/:id/edit(.:format)      blogs#edit
+          blog GET    /blogs/:id(.:format)           blogs#show
+               PATCH  /blogs/:id(.:format)           blogs#update
+               PUT    /blogs/:id(.:format)           blogs#update
+               DELETE /blogs/:id(.:format)           blogs#destroy
+          root GET    /                              pages#home
+
+# terlihat pada method show sudah tertambah alias prefix :
+
+
+portfolio_show GET    /portfolio/:id(.:format)       portfolios#show
+
+5. buka views/portfolios/index.html.erb
+
+ubah :
+
+<p><%= link_to portfolio_item.title, portfolio_path(portfolio_item.id) %></p>
+
+menjadi :
+
+<p><%= link_to portfolio_item.title, portfolio_show_path(portfolio_item.id) %></p>
+
+6. rails s coba akses detail portfolionya pastikan url sudah berubah
+
+7. git status
+git add .
+git commit -m "customized portfolio route"
+git push origin portfolio-feature

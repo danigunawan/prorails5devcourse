@@ -1,0 +1,36 @@
+REFF:
+===============
+1. buka routes.rb
+
+2. kita akan mengubah halaman home saat diakses dengan localhost:3000/pages/home menjadi root yg diakses menjadi localhost:3000
+
+ubah :
+get 'pages/home'
+
+menjadi :
+
+root to: 'pages#home'
+
+3. mengubah routing about url http://localhost:3000/pages/about menjadi http://localhost:3000/about
+
+- buka routes.rb, ubah :
+
+get 'pages/about' 
+
+menjadi :
+
+get 'about', to: 'pages#about'
+
+
+begitu dengan contact dari :
+
+get 'pages/contact'
+
+menjadi :
+
+get 'contact', to: 'pages#about' # 'contact' ini adalah alias nama bisa diisi apa aja misal 'contact-kita' berarti nanti diakses nya http://localhost:3000/contact-kita
+
+4. git status
+git add .
+git commit -m "configure custom routes for pages"
+git push origin portfolio-feature

@@ -1,0 +1,39 @@
+REFF:
+=============
+1. rails c
+
+# menampilkan data dimulai dari terakhir
+Portfolio.last
+
+2.buka portfolios_controller.rb
+tambahkan method :
+
+def index
+ @portfolio_items = Portfolio.all
+end
+
+sehingga :
+
+class PortfoliosController < ApplicationController
+def index
+ @portfolio_items = Portfolio.all
+ end
+end
+
+
+3. tambahkan index.html.erb di app\views\portfolios 
+
+isi : 
+
+<h1>Portfolio Item</h1>
+<% @portfolio_items.each do |portfolio_item| %>
+	<p><%= portfolio_item.title %></p> # ataU <p><%= link_to portfolio_item.title, portfolio_path(portfolio_item.id) %></p>
+	<p><%= portfolio_item.subtitle %></p>
+	<p><%= portfolio_item.body %></p>
+	<%= image_tag portfolio_item.thumb_image %>
+<% end %>	
+
+4. git status
+git add .
+git commit -m "integrated index action for portfolios items"
+git push origin portfolio-feature

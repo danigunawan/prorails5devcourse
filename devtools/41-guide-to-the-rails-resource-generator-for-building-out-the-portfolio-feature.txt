@@ -1,0 +1,12 @@
+REFF:
+==============
+1. git branch
+2. git checkout -b resource-generator
+3. rails g resource Portfolio title:string subtitle:string body:text main_image:text thumb_image:text
+4. rails db:migrate
+5. git status 
+6. git add .
+7. git commit -m "added portfolio items via resources generator"
+8. git checkout master
+9. git merge resource-generator
+10. git push

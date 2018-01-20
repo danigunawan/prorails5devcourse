@@ -1,5 +1,5 @@
 class BlogsController < ApplicationController
-  before_action :set_blog, only: [:show, :edit, :update, :destroy]
+  before_action :set_blog, only: [:show, :edit, :update, :destroy, :toggle_status] # sebelum aksi show edit update destroy memanggil call back dulu yakni set_blog
 
   # GET /blogs
   # GET /blogs.json
@@ -9,8 +9,7 @@ class BlogsController < ApplicationController
 
   # GET /blogs/1
   # GET /blogs/1.json
-  def show
-  end
+  
 
   # GET /blogs/new
   def new
@@ -61,10 +60,21 @@ class BlogsController < ApplicationController
     end
   end
 
+  def toggle_status
+    # byebug
+    if @blog.draft? # akan berganti status publish ketika masih status draft
+      @blog.published! 
+    else @blog.published? # akan berganti status draft ketika masih status publish
+      @blog.draft!
+    end
+    redirect_to blogs_url, notice: 'Post Status has been updated.'
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
+    # Callback function adalah function yang dibuat dan dieksekusi didalam function lain (function yang memanggilnya)
     def set_blog
-      @blog = Blog.find(params[:id])
+      @blog = Blog.friendly.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

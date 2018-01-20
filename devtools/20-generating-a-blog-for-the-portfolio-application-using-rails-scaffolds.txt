@@ -15,4 +15,3 @@ rake db:create # ini automatis membuat database
 
 4. rails s
 coba akses localhost:3000/blogs/new
-

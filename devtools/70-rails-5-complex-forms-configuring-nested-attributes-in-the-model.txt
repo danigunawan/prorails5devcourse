@@ -1,0 +1,81 @@
+REFF:
+===================
+
+dengan nested attributes kita bisa insert sebanyak apapun attributes sekaligus pada model portfolio yang mempunyai banyak (has_many) jenis/kategori portfolio (portfolio_id) dalam kasus ini kita insert
+pada technology , pada kasus ini kita akan insert 4 attributes sekaligus portfolio has_many technology
+
+1. buka models/portfolio.rb
+- tambahkan :
+
+accepts_nested_attributes_for :technologies, reject_if: lambda { |attrs| attrs['name'].blank? }
+
+
+- sehingga :
+
+class Portfolio < ApplicationRecord
+	has_many :technologies # technologies ambil dari nama table
+	accepts_nested_attributes_for :technologies, 
+								  reject_if: lambda { |attrs| attrs['name'].blank? }
+
+	include Placeholder
+	validates_presence_of :title, :subtitle, :body, :main_image, :thumb_image
+	
+	def self.angular
+		where(subtitle: 'Angular')
+	end
+
+	scope :ruby_on_rails_portfolio_items, -> { where(subtitle: 'Ruby On Rails') }
+
+	after_initialize :set_defaults
+
+	def set_defaults
+		
+		## Jika menggunakan template concerns placeholder atau cara normalnya 
+		#self.main_image ||= "http://placehold.it/600x400" 
+		# diatas ||= ini sama dengan if else yang dibawah
+			# if self.main_image == nil
+			# 	self.main_image = "http://placehold.it/600x400"
+			# end
+		#self.thumb_image ||= "http://placehold.it/350x200"
+			# diatas ||= ini sama dengan if else yang dibawah
+			# if self.thumb_image == nil
+			# 	self.thumb_image = "http://placehold.it/350x200"
+			# end
+
+		## Jika menggunakan cara concerns placeholder templatenya
+		self.main_image ||= Placeholder.image_generator(height: '600', width: '400')
+		self.thumb_image ||= Placeholder.image_generator(height: '350', width: '200')
+	end
+
+
+
+	
+
+end
+
+2. rails c
+Portfolio.create!(title: "Web app", subtitle: "asdfasdf", body: "asdfasd", technologies_attributes: [{name: 'Ruby'},{name:"Rails"},{name:"Angular"},{name: "Ionic"}])
+
+dengan nested attributes kita bisa insert sebanyak 3x pada model portfolio yang mempunyai banyak (has_many) jenis/kategori portfolio (portfolio_id) dalam kasus ini kita insert
+pada technology  
+
+<", subtitle: "asdfasdf", body: "asdfasd", technologies_attributes: [{name: 'Ruby'},{name:"Rails"},{name:"Angular"},{name: "Ionic"}])
+   (29.0ms)  SET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483
+   (0.0ms)  BEGIN
+  SQL (12.0ms)  INSERT INTO `portfolios` (`title`, `subtitle`, `body`, `main_image`, `thumb_image`, `created_at`, `updated_at`) VALUES ('Web app', 'asdfasdf', 'asdfasd', 'http://placehold.it/600x400', 'http://placehold.it/350x200', '2018-01-20 02:50:44', '2018-01-20 02:50:44')
+  SQL (11.0ms)  INSERT INTO `technologies` (`name`, `portfolio_id`, `created_at`, `updated_at`) VALUES ('Ruby', 10, '2018-01-20 02:50:44', '2018-01-20 02:50:44')
+  SQL (0.0ms)  INSERT INTO `technologies` (`name`, `portfolio_id`, `created_at`, `updated_at`) VALUES ('Rails', 10, '2018-01-20 02:50:44', '2018-01-20 02:50:44')
+  SQL (0.0ms)  INSERT INTO `technologies` (`name`, `portfolio_id`, `created_at`, `updated_at`) VALUES ('Angular', 10, '2018-01-20 02:50:44', '2018-01-20 02:50:44')
+  SQL (0.0ms)  INSERT INTO `technologies` (`name`, `portfolio_id`, `created_at`, `updated_at`) VALUES ('Ionic', 10, '2018-01-20 02:50:44', '2018-01-20 02:50:44')
+   (137.0ms)  COMMIT
+=> #<Portfolio id: 10, title: "Web app", subtitle: "asdfasdf", body: "asdfasd", main_image: "http://placehold.it/600x400", thumb_image: "http://placehold.it/350x200", created_at: "2018-01-20 02:50:44", updated_at: "2018-01-20 02:50:44">
+
+3.  Portfolio.last.technologies.count
+  Portfolio Load (0.0ms)  SELECT  `portfolios`.* FROM `portfolios` ORDER BY `portfolios`.`id` DESC LIMIT 1
+   (15.0ms)  SELECT COUNT(*) FROM `technologies` WHERE `technologies`.`portfolio_id` = 11
+=> 4
+
+4. git status
+git add .
+git commit -m "Integrated nested attributes for portfolio model"
+git push origin data-feature

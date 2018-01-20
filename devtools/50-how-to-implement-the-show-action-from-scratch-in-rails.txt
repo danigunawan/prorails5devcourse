@@ -1,0 +1,32 @@
+REFF:
+============
+kita disini mengimplementasi show action halaman
+
+# contoh SELECT active recortd membuat halaman show
+1.buka portfolios_controller 
+tambahkan :
+
+
+2. buat show.html.erb di portfolios/show.html.erb
+isikan :
+
+<%= image_tag @portfolio_item.main_image %>
+<h1><%=@portfolio_item.title %></h1>
+<em><%=@portfolio_item.subtitle %></em>
+<%#=@portfolio_item.inspect %>
+
+
+3. buka portfolios/index.html.erb
+ubah/tambahkan link index beserta titlenya :
+
+dari :
+
+<p><%= portfolio_item.title %></p>
+
+menjadi :
+ 
+<p><%= link_to portfolio_item.title, portfolio_path(portfolio_item.id) %></p> # portfolio_path(portfolio_item.id) ini mengambil path prefix beserta object idnya
+
+4. git add .
+git commit -m "implemented show functionality for portfolio module"
+git push origin portfolio-feature

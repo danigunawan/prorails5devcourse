@@ -1,0 +1,89 @@
+REFF :
+================
+
+implementasi data validasi
+
+1. git checkout master
+git pull
+git checkout -b data-feature
+
+2. rails c
+Blog.create()
+Blog.last
+Blog.last.delete
+
+3. buka views/blogs/index.html.erb
+tambahkan fungsi upcase (Huruf Besar) pada title :
+
+- dari :
+
+<td><%= blog.title %></td>
+
+- menjadi :
+
+<td><%= blog.title.upcase %></td>
+
+
+== STEP MEMBUAT VALIDASI ==
+4. Membuat validasi untuk model
+
+# Model Blog
+- buka model blog.rb
+
+- tambahkan :
+
+validates_presence_of :title, :body
+
+- sehingga :
+
+class Blog < ApplicationRecord
+	enum status: { draft: 0, published: 1 }
+	extend FriendlyId
+	friendly_id :title, use: :slugged
+
+	validates_presence_of :title, :body
+end
+
+# Model Portfolio
+
+- buka model portfolio.rb
+
+- tambahkan :
+
+validates_presence_of :title, :subtitle, :body, :main_image, :thumb_image
+
+sehingga :
+class Portfolio < ApplicationRecord
+	validates_presence_of :title, :body, :main_image, :thumb_image
+end
+
+# Model Skill
+
+- buka model skill.rb
+
+- tambahkan :
+
+validates_presence_of :title, :percent_utilized
+
+sehingga :
+class Skill < ApplicationRecord
+	validates_presence_of :title, :percent_utilized
+end
+
+
+5. coba kita insert dengan data kosong melalui terminal irb
+- rails c
+- Blog.create()
+- Blog.create!() # saat di execute akan ada validasi tidak boleh kosong dari field title maupuh body
+- exit()
+
+6. rails s
+
+- uji coba 
+buka localhost:3000/blogs/new coba insert kosongkan pastikan validasi berfungsi
+
+7. git status
+git add .
+git commit -m "implemented validation for blogs, skills, and portfolio items"
+git push origin data-feature
+
