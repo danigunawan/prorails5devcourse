@@ -1,0 +1,121 @@
+REFF:
+===============
+
+kita akan membuat form dengan 3 input untuk 3x insert dalam satu submit melalui nested attributes, kasus ini 3x insert model portfolio untuk 3x portfolio_id(technology) as portfolio punya banyak portfolio_id pada model technology (has_many)
+
+
+1. buka portfolios_controller.rb
+- tambahkan pada method def new :
+
+   3.times { @portfolio_item.technologies.build }
+
+#sehingga :
+ 
+   def new
+    @portfolio_item = Portfolio.new
+    3.times { @portfolio_item.technologies.build }
+   end
+
+- tambahkan pada method def create :
+# pada permit technologies_attributes: [:name])
+
+@portfolio_item = Portfolio.new(params.require(:portfolio).permit(:title, :subtitle, :body, technologies_attributes: [:name]))  #pakai params.require(:portfolio).permit(:title, :subtitle, :body) supaya aman 
+
+# sehingga :
+def create
+	@portfolio_item = Portfolio.new(params.require(:portfolio).permit(:title, :subtitle, :body, technologies_attributes: [:name]))  #pakai params.require(:portfolio).permit(:title, :subtitle, :body) supaya aman 
+	
+	respond_to do |format|
+		if @portfolio_item.save 
+      	format.html { redirect_to portfolios_path, notice: 'Portfolio was successfully created.' } #portolios_path dari routes prefix
+      	format.json { render :show, status: :ok, location: @portfolio_item }
+      else
+      	format.html { render :new }
+      	format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+      end
+  end
+end
+
+2. buka views/portfolios/new.html.erb
+
+- tambahkan setelah label body:
+dibawah ini membuat nested attributes untuk 3x input pada model portfolios has many technology, akan muncul 3 input karena 
+diset pada portfolios_controller : 3.times { @portfolio_item.technologies.build } #pada loop foreach akan ada 3x times/input
+
+<ul>
+    <%= f.fields_for :technologies do |technology_form| %> <!--technologies diambil dari model portfolio pada accepts_nested_attributes_for -->
+      <li>
+        <%= technology_form.label :name %>
+        <%= technology_form.text_field :name %>
+      </li>
+    <% end %>
+  </ul>
+
+sehingga : 
+
+<h1>Create a new portfolio item</h1>
+<%= form_for(@portfolio_item) do |f| %>
+
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subtitle %>
+    <%= f.text_area :subtitle %>
+  </div>
+
+    <div class="field">
+    <%= f.label :body %>
+    <%= f.text_area :body %>
+  </div>
+
+  <ul>
+    <%= f.fields_for :technologies do |technology_form| %> <!--technologies diambil dari model portfolio pada accepts_nested_attributes_for -->
+      <li>
+        <%= technology_form.label :name %>
+        <%= technology_form.text_field :name %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+3. buka views/portfolios/show.html.erb
+kita akan munculkan 3 items nested attributes tadi yang kita insert pada show 
+
+- tambahkan :
+
+<h2>Technology Used:</h2>
+
+<% @portfolio_item.technologies.each do |t| %>
+<p><%= t.name %></p>
+<% end %>
+
+sehingga : 
+
+<%= image_tag @portfolio_item.main_image %>
+<h1><%=@portfolio_item.title %></h1>
+<em><%=@portfolio_item.subtitle %></em>
+<p><%=@portfolio_item.body %></p>
+
+<h2>Technology Used:</h2>
+
+<% @portfolio_item.technologies.each do |t| %>
+<p><%= t.name %></p>
+<% end %>
+<%#=@portfolio_item.inspect %>
+
+
+======
+4. buka views/portfolios/edit.html.erb
+kita akan membuat input edit untuk nested 3 input atributes tadi agar bisa diedit dan update
+
+
+4. git add .
+
