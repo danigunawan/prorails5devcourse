@@ -1,8 +1,8 @@
 REFF:
 ===================
 
-dengan nested attributes kita bisa insert sebanyak 3x sekaligus pada model portfolio yang mempunyai banyak (has_many) jenis/kategori portfolio (portfolio_id) dalam kasus ini kita insert
-pada technology 
+dengan nested attributes kita bisa insert sebanyak apapun attributes sekaligus pada model portfolio yang mempunyai banyak (has_many) jenis/kategori portfolio (portfolio_id) dalam kasus ini kita insert
+pada technology , pada kasus ini kita akan insert 4 attributes sekaligus portfolio has_many technology
 
 1. buka models/portfolio.rb
 - tambahkan :
@@ -75,4 +75,7 @@ pada technology
    (15.0ms)  SELECT COUNT(*) FROM `technologies` WHERE `technologies`.`portfolio_id` = 11
 => 4
 
-4. git add .
+4. git status
+git add .
+git commit -m "Integrated nested attributes for portfolio model"
+git push origin data-feature
