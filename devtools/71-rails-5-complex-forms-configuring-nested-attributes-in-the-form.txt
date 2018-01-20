@@ -117,5 +117,19 @@ sehingga :
 kita akan membuat input edit untuk nested 3 input atributes tadi agar bisa diedit dan update
 
 
-4. git add .
+4. git status
+git add .
+git commit -m "Implemented form configuration for nested attributes"
+git push origin data-feature
 
+5. buka git pada https://github.com/danigunawan/prorails5devcourse/tree/data-feature
+- klik compare & pull request
+- lalu isikan
+  # implemented validations
+  # created db relationships
+  # implemented nested atribute forms
+  # created customs scope
+- merge pull request, lalu ok
+
+- git checkout master
+- git pull
