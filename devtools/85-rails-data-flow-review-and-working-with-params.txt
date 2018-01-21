@@ -1,0 +1,41 @@
+REFF:
+===========
+data flow review dan kerja dari parameter
+
+1. git checkout -b controller
+2. buka \app\views\portfolios\show.html.erb
+tambahkan : 
+
+<%= params.inspect %> # untuk menginspeksi parameter apa saja pada show.html.erb
+<%= params.[:action] %> # untuk mengambil nilai parameter action
+<%= Portfolio.find(params[:id]) %> # untuk mencari parameter Portfolio berdasarkan id
+<%= Portfolio.find(params[:id]).title %> # mencari parameter Portfolio berdasarkan id dan mengambil isi nilai title pada object Portfolio tersebut
+<%= Portfolio.find(params[:id]).technologies %> # mencari parameter Portfolio berdasarkan id dan mengambil isi nilai technologies pada object Portfolio tersebut
+
+# contoh http://localhost:3000/portfolio/12 :
+<ActionController::Parameters {"controller"=>"portfolios", "action"=>"show", "id"=>"12"} permitted: false>
+
+3. kita kembalikan normal lagi pada tahap ini hanya mengecek inspeksi dari parameter saja dan cara kerjanya
+jika diperlukan uncomment saja cara penggunaannya.
+
+save show.html.erb, sehingga :
+
+<%= image_tag @portfolio_item.main_image %>
+<h1><%=@portfolio_item.title %></h1>
+<em><%=@portfolio_item.subtitle %></em>
+<p><%=@portfolio_item.body %></p>
+
+<h2>Technology Used:</h2>
+
+<% @portfolio_item.technologies.each do |t| %>
+<p><%= t.name %></p>
+<% end %>
+<%#=@portfolio_item.inspect %>
+
+<%#= params.inspect %>
+<%#= params[:action] %>
+
+
+<%#= Portfolio.find(params[:id]) %>
+<%#= Portfolio.find(params[:id]).title %>
+<%#= Portfolio.find(params[:id]).technologies %>

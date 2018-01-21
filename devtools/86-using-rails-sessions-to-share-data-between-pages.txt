@@ -1,0 +1,144 @@
+REFF:
+==================
+menggunalam session untuk share data diantara halaman
+
+1. buka app/controllers/application_controller.rb
+
+tambahkan : 
+
+- before_action :set_source 
+
+- dan :
+
+  def set_source
+  	session[:source] = params[:q] if params[:q]
+  end
+
+- sehingga : 
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  before_action :set_source
+
+  def set_source
+  	session[:source] = params[:q] if params[:q]
+  end
+
+end
+
+2. buka app/views/portfolios/show.html.erb
+
+kita check session dengan inspeksi
+
+- tambahkan :
+
+<hr>
+<%= session.inspect %>
+
+- sehingga :
+
+<%= image_tag @portfolio_item.main_image %>
+<h1><%=@portfolio_item.title %></h1>
+<em><%=@portfolio_item.subtitle %></em>
+<p><%=@portfolio_item.body %></p>
+
+<h2>Technology Used:</h2>
+
+<% @portfolio_item.technologies.each do |t| %>
+<p><%= t.name %></p>
+<% end %>
+
+<%#=@portfolio_item.inspect %>
+
+<%#= params.inspect %>
+<%#= params[:action] %>
+
+
+<%#= Portfolio.find(params[:id]) %>
+<%#= Portfolio.find(params[:id]).title %>
+<%#= Portfolio.find(params[:id]).technologies %>
+
+<hr>
+<%= session.inspect %>
+
+3. buka app/views/portfolios/show.html.erb
+
+coba tambahkan inspect params
+
+<%= params.inspect %>
+
+sehingga : 
+
+
+<hr>
+<%= params.inspect %>
+<hr>
+<%= session.inspect %>
+
+- dan buka : http://localhost:3000/portfolio/1?q=twitter
+
+# output params 
+<ActionController::Parameters {"q"=>"twitter", "controller"=>"portfolios", "action"=>"show", "id"=>"1"} permitted: false>
+
+ket : "q" => "twitter" parameter pada url 1?q=twittwer
+
+# ctrl + f = cari keyword "source" pada halaman tersebut tanpa petik dia akan merujuk pada nilai element array twitter dimana element ini yang sedang kita akses
+
+
+4. buka app/views/layouts/application.html.erb
+- tambahkan : 
+
+<% if session[:source] %>
+	thanks for visiting me from <%= session[:source] %>
+<% end %>
+
+- sehingga : 
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ProfessionalRailsLimaDevelopmentCourse</title>
+	<%= csrf_meta_tags %>
+
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<% if current_user %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+	
+	<%= yield %>
+	
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+	
+</body>
+</html>
+
+5. git status
+git add .
+git commit -m "Added Session tracker for dynamic source links"
+git push origin controller

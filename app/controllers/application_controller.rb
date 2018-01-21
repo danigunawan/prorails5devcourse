@@ -14,4 +14,10 @@ class ApplicationController < ActionController::Base
   # Jika Menggunakan Concerns untuk permitted parameter devise
   include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
 
+  before_action :set_source
+
+  def set_source
+  	session[:source] = params[:q] if params[:q]
+  end
+
 end

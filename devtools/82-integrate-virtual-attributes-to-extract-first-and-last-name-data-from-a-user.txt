@@ -77,6 +77,7 @@ u = User.last
 u.first_name
 u.last_name
 u.update!(name: "Cher")
+User.update_all(name: "Dani Gunawan")
 
 3. buka app/views/pages/home.html.erb
 - tambahkan : 
@@ -99,3 +100,13 @@ u.update!(name: "Cher")
 git add .
 git commit -m "Completed Authentication with virtual attributes for user model"
 git push origin authentication
+
+6. buka https://github.com/danigunawan/prorails5devcourse
+- klik compare & pull request
+- isikan di write :
+implemented devise based authentication, along with custom attributes for "User" model
+- create pull request
+- merge pull request
+
+7. git checkout master
+git pull
