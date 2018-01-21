@@ -153,6 +153,19 @@ devise_for :users
 email : dhanexlab@gmail.com
 pass  : 29912120
 
+
+
+9. rails c
+
+User.last
+
+10. git status
+git add .
+git commit -m "implemented basic authentication"
+git push origin authentication
+
+
+#################### ERROR TROUBLESHOOT ###########################
 ## Jika error cannot load such file -- bcrypt_ext
 Solusi : 
 
@@ -164,7 +177,9 @@ gem install bcrypt --platform=ruby
 ## Jika error ActionController::InvalidAuthenticityToken
 https://stackoverflow.com/questions/20875591/actioncontrollerinvalidauthenticitytoken-in-registrationscontrollercreate/20875842#20875842
 
-Solusi :
+Solusi 1 : jika pada browser menggunakan plugin enable cross origin resource sharing (CORS)/ extension di matikan dulu karena token tidak akan dikenali
+
+Solusi 2 :
 
 - buka app/controllers/application_controller.rb
 tambahkan : 
@@ -178,6 +193,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   skip_before_action :verify_authenticity_token, :only => :create
 end
+
 
 ## Jika error undefined method `skip_before_filter' for ApplicationController:Class Did you mean? skip_before_action
 
@@ -196,14 +212,6 @@ Ket : # skip_before_filter has been deprecated in Rails 5.0 and removed in 5.1.
 - coba daftar kembali pastikan tidak error
 
 
-9. rails c
-
-User.last
-
-10. git status
-git add .
-git commit -m "implemented basic authentication"
-git push origin authentication
 
 ###################################################
 OPTIONAL JIKA PADA DEVISE DITAMBAHKAN :CONFIRMABLE

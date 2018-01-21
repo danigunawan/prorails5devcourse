@@ -1,6 +1,6 @@
 REFF:
 ================
-custom routes untuk autentikasi devise
+custom routes untuk autentikasi devise sehingga url lebih friendly
 
 1. buka config/routes.rb
 - ubah : 
