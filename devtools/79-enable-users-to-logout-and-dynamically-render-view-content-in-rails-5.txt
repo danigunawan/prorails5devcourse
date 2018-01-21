@@ -1,0 +1,94 @@
+REFF:
+=================
+tujuan bahasan mengaktifkan fitur user untuk login, logout, signup diview secara dinamis konten
+
+1.  buka app/views/layouts/application.html.erb
+pada session ruby on rails diperlukan inisialisasi csrf token untuk login/out/signup berada pada view yang bersangkutan, 
+
+- pastikan pada application.html.erb secara dinamis maka otomatis setiap page segment view pastikan ada csrf syntax dibawah ini :
+<%= csrf_meta_tags %>
+
+- cek route logout
+rake routes | grep logout
+- copykan prefix url logout
+destroy_user_session DELETE /logout(.:format)    devise/sessions#destroy
+
+prefix verb : destroy_user_session ke application.html.erb
+
+<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+
+- sehingga : 
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ProfessionalRailsLimaDevelopmentCourse</title>
+	<%= csrf_meta_tags %>
+
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+
+	<%= yield %>
+</body>
+</html>
+
+2. buka app/views/layouts/application.html.erb
+kita akan membuat jika user setelah logout akan muncul session tombol untuk login dan signup, sebaliknya ketika sudah login maka 
+user session hanya bisa logout.
+
+- cek prefix path user session di route
+rake routes | grep user
+
+- ubah pada application.html.erb : 
+
+<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+
+# menjadi : 
+
+	<% if current_user %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+
+
+# lengkapnya seperti ini : 
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ProfessionalRailsLimaDevelopmentCourse</title>
+	<%= csrf_meta_tags %>
+
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<% if current_user %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+	
+	<%= yield %>
+</body>
+</html>
+
+3. rails s # coba login logout dan register maka akan sesuai kondisi seperti logic diatas tadi
+4. git status
+git add .
+git commit -m "Implemented logout functionality and dynamic view rendering for auth"
+git push origin authentication

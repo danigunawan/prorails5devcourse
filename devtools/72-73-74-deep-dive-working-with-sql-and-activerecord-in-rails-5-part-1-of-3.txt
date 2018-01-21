@@ -1,0 +1,355 @@
+REFF:
+http://guides.rubyonrails.org/active_record_querying.html
+http://riefsoft.blogspot.co.id/2015/02/cara-penggunaan-database-di-laravel.html # perbedaan raw query , query builder (fluent query) dan orm eloquent
+https://stackoverflow.com/questions/18861779/should-i-ignore-schema-rb-because-extension-differs-on-development-production-os
+==============
+disini kita akan belajar dalami active record pengganti query sql alias ORM, atau jika pada laravel
+ada namanya RAW Query, Query builder(fluent query) dan ORM Eloquent pada ruby pun consume seperti laravel.
+
+
+
+############# PART 72 ############################################
+########### CARA 1 DANI GUNAWAN MELALUI SCAFFOLD ##################
+
+1. rails new professional-rails-lima-development-course-72-74 -d mysql
+2. cd professional-rails-lima-development-course-72-74
+
+3. rails g scaffold Author name:string country:text
+4. rails g scaffold Genre name:string
+5. rails g scaffold Book title:string author_id:integer genre_id:integer sales:integer author:references genre:references
+
+6. rake db:create 
+atau rake db:setup (create database dan migrate)
+atau rails db:migrate 
+
+- buka db/seeds.rb
+tambahkan :
+
+#rails db:seed atau bisa melalui rails c
+
+dani = Author.create!(name: "Dani Gunawan", country: "Mustafar")
+dadan = Author.create!(name: "Dadan", country: "Tatooine")
+leia = Author.create!(name: "leia", country: "Alderaan")
+
+fiction = Genre.create!(name: "Buku Rails")
+non_fiction = Genre.create!(name: "Buku Ruby")
+biographies = Genre.create!(name: "Biographies")
+
+Book.create!(title: "The Force", genre_id: non_fiction.id, author_id: dadan.id, sales: 500)
+Book.create!(title: "Britney Speares: An Anthology", genre_id: biographies.id, author_id: dani.id, sales: 950)
+Book.create!(title: "Only One Direction", genre_id: biographies.id, author_id: dani.id, sales: 45)
+Book.create!(title: "DIY", genre_id: non_fiction.id, author_id: dani.id, sales: 1200)
+
+
+- rails db:seed
+
+4. buka views/books/index.html
+hilangkan author_id dan genre_id kita hide
+
+- ubah : 
+
+<p id="notice"><%= notice %></p>
+
+<h1>Books</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Genre</th>
+      <th>Sales</th>
+      <th>Author</th>
+      <th>Genre</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @books.each do |book| %>
+      <tr>
+        <td><%= book.title %></td>
+        <td><%= book.author %></td>
+        <td><%= book.genre %></td>
+        <td><%= book.sales %></td>
+        <!-- <td><%= book.author_id  %></td> -->
+        <!-- <td><%= book.genre_id %></td> -->
+        
+        <td><%= link_to 'Show', book %></td>
+        <td><%= link_to 'Edit', edit_book_path(book) %></td>
+        <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Book', new_book_path %>
+
+
+- menjadi : 
+
+<p id="notice"><%= notice %></p>
+
+<h1>Books</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Author Location</th>
+      <th>Genre</th>
+      <th>Sales</th>
+      <th>Author</th>
+      <th>Genre</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @books.each do |book| %>
+      <tr>
+        <td><%= book.title %></td>
+        <td><%= book.author.name %></td>
+        <td><%= book.author.country %></td>
+        <!-- <td><%= book.author.inspect %></td> -->
+        <td><%= book.genre.name %></td>
+        <!-- <td><%= book.genre.inspect %></td> -->
+        <td><%= book.sales %></td>
+        <!-- <td><%= book.author_id  %></td> -->
+        <!-- <td><%= book.genre_id %></td> -->
+        
+        <td><%= link_to 'Show', book %></td>
+        <td><%= link_to 'Edit', edit_book_path(book) %></td>
+        <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Book', new_book_path %>
+
+
+5.  buka views/books/_form.html.erb
+
+hilangkan author_id dan genre_id kita hide
+
+- ubah menjadi :
+<%= form_with(model: book, local: true) do |form| %>
+  <% if book.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(book.errors.count, "error") %> prohibited this book from being saved:</h2>
+
+      <ul>
+      <% book.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, id: :book_title %>
+  </div>
+
+  div class="field">
+    <%= form.label :author_id %>
+    <%= form.number_field :author_id, id: :book_author_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :genre_id %>
+    <%= form.number_field :genre_id, id: :book_genre_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sales %>
+    <%= form.number_field :sales, id: :book_sales %>
+  </div>
+
+  <!-- <div class="field">
+    <%= form.label :author_id %>
+    <%= form.text_field :author_id, id: :book_author_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :genre_id %>
+    <%= form.text_field :genre_id, id: :book_genre_id %>
+  </div> -->
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+6. buka app/controllers/books_controller.rb
+karena menggunakan scaffold beserta referensi nya suka double pada params permit nya jadi ada 2 seperti dibawah ini author_id ada 2 dan genre_id ada 2
+- ubah pada permit :
+  
+    def book_params
+      params.require(:book).permit(:title, :author_id, :genre_id, :sales, :author_id, :genre_id)
+    end
+- sehingga menjadi : 
+
+     def book_params
+      params.require(:book).permit(:title, :sales, :genre_id, :author_id)
+    end
+
+# permit ini adalah untuk mencegah vulnerability
+
+7. buka app/models/book.rb
+
+- kita tambahkan :
+
+#validasi form
+validates_presence_of :title, :sales, :genre_id, :author_id # fungsi untuk validation form jika error maka akan notif merah
+
+#orm models relationships si book milik si author dan genre (bagian)
+belongs_to :author
+belongs_to :genre
+
+- sehingga : 
+
+class Book < ApplicationRecord
+  
+#validasi form
+  validates_presence_of :title, :sales, :genre_id, :author_id
+
+#orm models relationships
+  belongs_to :author
+  belongs_to :genre
+end
+
+8. buka buka app/models/author.rb
+- tambahkan : 
+
+#validasi form
+validates_presence_of :name, :country
+
+#orm models relationships has many si author punya banyak book
+has_many :book
+
+9. buka buka app/models/genre.rb
+- tambahkan : 
+
+#validasi form
+validates_presence_of :name
+
+#orm models relationships has many si author punya banyak book
+has_many :book
+
+
+10. rails c
+Book.all
+Book.all.count
+Book.find_by_sql("SELECT books.* FROM books") # menggunakan sql / raw sql
+Book.where(title: "Buku Rails")
+Book.where(title: "Buku Rails").first.author # where dengan ORM author paling pertama
+Book.find_by_title("Buku Rails").author # cari berdasarkan title ORM Book dengan author
+Book.where(title: "Buku Rails").class # check relasi active record
+Book.find_by_title("Buku Rails").class # check relasi active record berdasarkan title # find_by_title cari pada seed.rb pada schema nya yakni field/atribut
+
+
+
+########### CARA 2 FROM SCRATCH TANPA SCAFFOLD ##################
+BELUM SEMPAT BIKIN TUTORNYA
+
+GUIDE ADA DI : 65-guide-to-data-relationships-in-rails.txt
+
+########### END CARA 2 FROM SCRATCH TANPA SCAFFOLD ##################
+
+
+############# PART 73 ################
+
+# lanjutan no.10 :
+
+Author.find_by_country("Tatooine")
+Author.create!(name: "Luke's Twin", country: "Tatooine")
+Author.where(country: "Tatooine")
+## find_by_name
+Author.find_by_name("leila")
+leia = Author.find_by_name("leia")
+dani = Author.find_by_name("Dani Gunawan")
+luke = Author.find_by_name("Luke's Twin")
+luke.book # ini menampilkan orm relasi antara author dan buku (artinya author punya banyak book)
+luke.book.any? # cek relasi true or false
+Book.count #total book
+
+dani = Author.find_by_name("Dani Gunawan")
+dani.books
+dani.book.sum(:sales)
+Book.average(:sales)
+Book.average(:sales).to_f
+Book.all
+Book.maximum(:sales)
+Book.order('sales DESC')
+Book.order('sales DESC').first
+Book.order('sales DESC').first.author.name
+
+
+
+############## PART 74 ##############
+
+bahasan kali ini belajar mendalami active record beserta
+has_many through pada model
+
+11. buka models/author.rb
+- tambahkan :
+has_many :genre, through: :book
+
+- sehingga :
+
+class Author < ApplicationRecord
+   validates_presence_of :name, :country
+   has_many :book
+   has_many :genre, through: :book  # author punya banyak genre langsung(through relasi) dari book
+end
+
+12. buka models/genre.rb
+- tambahkan : 
+  has_many :author, through: :book 
+
+
+- sehingga : 
+class Genre < ApplicationRecord
+	validates_presence_of :name
+	has_many :books
+        has_many :author, through: :book  # genre punya banyak author langsung(through relasi) dari book
+end
+
+13. rails c # atau jika sudah ada terminalnya tinggal # untuk reload rails c pakai ketik reload! 
+- dani = Author.find_by_name("Dani Gunawan")
+- dani.genre # author punya banyak genre dimana diambil dari hasil relasi antara author dengan genre
+- Author.first
+- Author.first.genre # author punya banyak genre diambil dari hasil relasi antara author dengan genre dan mengambil data paling pertama
+- dani_new = Author.first
+- dani_new.genre
+- Genre.all
+- Genre.pluck(:name)
+- Author.pluck(:name)
+- Book.pluck(:title)
+- dani_new.book.pluck(:title)
+
+14. INCLUDE QUERY SELECTED OPTIONAL PADA BOOK CONTROLLER
+
+- buka app/controllers/books_controller.rb (OPTIONAL
+
+- ubah pada method def index : 
+
+  def index
+    @books = Book.all # menampilkan seluruh data pada object Book
+  end
+
+- menjadi : 
+
+ def index
+   @books = Book.includes(:author, :genre) # menampilkan data pada object Book dengan opsi beberapa atribut saja yang proses pada query yakni author dan genre
+  end
+
+# cara include query ini optional saja jarang digunakan

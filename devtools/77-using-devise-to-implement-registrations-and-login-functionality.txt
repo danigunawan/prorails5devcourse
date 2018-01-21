@@ -1,0 +1,249 @@
+REFF:
+https://rubygems.org/gems/devise
+https://github.com/plataformatec/devise
+===================
+1. rails generate devise:install
+
+============== SETELAH INSTALL rails generate devise:install YANG PERLU DI INSTALl CARA 1 ENGLISH ================
+Some setup you must do manually if you haven't yet:
+
+  1. Ensure you have defined default url options in your environments files. He
+e
+     is an example of default_url_options appropriate for a development environ
+ent
+     in config/environments/development.rb:
+
+       config.action_mailer.default_url_options = { host: 'localhost', port: 30
+0 }
+
+     In production, :host should be set to the actual host of your application.
+
+  2. Ensure you have defined root_url to *something* in your config/routes.rb.
+     For example:
+
+       root to: "home#index"
+
+  3. Ensure you have flash messages in app/views/layouts/application.html.erb.
+     For example:
+
+       <p class="notice"><%= notice %></p>
+       <p class="alert"><%= alert %></p>
+
+  4. You can copy Devise views (for customization) to your app by running:
+
+       rails g devise:views
+
+===============================================================================
+
+# CARA 2 INDO
+
+2. buka \config\initializers\devise.rb
+- coba kita akan ubah salah satu setingan : 
+ config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+
+# menjadi :
+ config.mailer_sender = 'support@devcamp.com'
+
+- letak setingan env development config\environments\development.rb
+- letak root url di config/routes.rb 
+# root pada views halaman awal :
+
+root to: "home#index"
+
+- buka layout root \app\views\layouts\application.html.erb
+# tambahkan :
+ <p class="notice"><%= notice %></p>
+ <p class="alert"><%= alert %></p>
+
+# sehingga : 
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ProfessionalRailsLimaDevelopmentCourse</title>
+	<%= csrf_meta_tags %>
+
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	<%= yield %>
+</body>
+</html>
+
+3. rails g devise:views
+
+# output : 
+
+invoke  Devise::Generators::SharedViewsGenerator
+create    app/views/devise/shared
+create    app/views/devise/shared/_links.html.erb
+invoke  form_for
+create    app/views/devise/confirmations
+create    app/views/devise/confirmations/new.html.erb
+create    app/views/devise/passwords
+create    app/views/devise/passwords/edit.html.erb
+create    app/views/devise/passwords/new.html.erb
+create    app/views/devise/registrations
+create    app/views/devise/registrations/edit.html.erb
+create    app/views/devise/registrations/new.html.erb
+create    app/views/devise/sessions
+create    app/views/devise/sessions/new.html.erb
+create    app/views/devise/unlocks
+create    app/views/devise/unlocks/new.html.erb
+invoke  erb
+create    app/views/devise/mailer
+create    app/views/devise/mailer/confirmation_instructions.html.erb
+create    app/views/devise/mailer/email_changed.html.erb
+create    app/views/devise/mailer/password_change.html.erb
+create    app/views/devise/mailer/reset_password_instructions.html.erb
+create    app/views/devise/mailer/unlock_instructions.html.erb
+
+
+4. rails generate devise User atau rails g devise User
+
+# output : 
+ 
+invoke  active_record
+ create    db/migrate/20180120175658_devise_create_users.rb
+ create    app/models/user.rb
+ invoke    test_unit
+ create      test/models/user_test.rb
+ create      test/fixtures/users.yml
+ insert    app/models/user.rb
+  route  devise_for :users
+
+# cek di routes.rb pasti akan ada setingan devise yang ditambah :
+
+devise_for :users
+
+6. buka models/user.rb
+
+- tambahkan :
+
+## Custom fields
+      t.string :name
+
+- sehingga persis seperti : 
+
+ def change
+    create_table :users do |t|
+      ## Database authenticatable
+      t.string :email,              null: false, default: ""
+      t.string :encrypted_password, null: false, default: ""
+
+      ## Custom fields
+      t.string :name
+
+      ## Recoverable
+      t.string   :reset_password_token
+      t.datetime :reset_password_sent_at
+
+
+7. rails db:migrate
+
+8. rails s
+
+- buka http://localhost:3000/users/sign_up
+
+# daftar dengan akun :
+email : dhanexlab@gmail.com
+pass  : 29912120
+
+
+
+9. rails c
+
+User.last
+
+10. git status
+git add .
+git commit -m "implemented basic authentication"
+git push origin authentication
+
+
+#################### ERROR TROUBLESHOOT ###########################
+## Jika error cannot load such file -- bcrypt_ext
+Solusi : 
+
+gem uninstall bcrypt-ruby
+gem uninstall bcrypt
+gem install bcrypt --platform=ruby
+
+
+## Jika error ActionController::InvalidAuthenticityToken
+https://stackoverflow.com/questions/20875591/actioncontrollerinvalidauthenticitytoken-in-registrationscontrollercreate/20875842#20875842
+
+Solusi 1 : jika pada browser menggunakan plugin enable cross origin resource sharing (CORS)/ extension di matikan dulu karena token tidak akan dikenali
+
+Solusi 2 :
+
+- buka app/controllers/application_controller.rb
+tambahkan : 
+skip_before_action :verify_authenticity_token, :only => :create
+
+sehingga : 
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token, :only => :create
+end
+
+
+## Jika error undefined method `skip_before_filter' for ApplicationController:Class Did you mean? skip_before_action
+
+https://stackoverflow.com/questions/45015651/undefined-method-for-before-filter
+
+Solusi ubah : 
+
+  skip_before_filter :verify_authenticity_token, :only => :create 
+
+menjadi : 
+
+  skip_before_action :verify_authenticity_token, :only => :create
+
+Ket : # skip_before_filter has been deprecated in Rails 5.0 and removed in 5.1.
+
+- coba daftar kembali pastikan tidak error
+
+
+
+###################################################
+OPTIONAL JIKA PADA DEVISE DITAMBAHKAN :CONFIRMABLE
+===================================================
+- buka models/user.rb
+# tambahkan setinga devise : 
+
+:confirmable
+
+# sehingga :
+
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :confirmable
+end
+
+- buka migrasi db/migrate/20180120175658_devise_create_users.rb
+uncomment pada : 
+
+      ## Confirmable
+      # t.string   :confirmation_token
+      # t.datetime :confirmed_at
+      # t.datetime :confirmation_sent_at
+      # t.string   :unconfirmed_email # Only if using reconfirmable
+
+sehingga : 
+
+# Confirmable
+      t.string   :confirmation_token
+      t.datetime :confirmed_at
+      t.datetime :confirmation_sent_at
+      t.string   :unconfirmed_email # Only if using reconfirmable
+

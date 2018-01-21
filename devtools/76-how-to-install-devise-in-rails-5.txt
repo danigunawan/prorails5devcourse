@@ -1,0 +1,26 @@
+REFF:
+https://rubygems.org/gems/devise
+https://github.com/plataformatec/devise
+==================
+prepare :
+subl .
+git branch
+git pull
+
+
+1. git checkout -b authentication
+2. buka https://rubygems.org/gems/devise
+- copy : gem 'devise', '~> 4.4'
+- paste ke gemfile 
+sehingga persis seperti ini: 
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'friendly_id', '~> 5.1.0' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
+gem 'devise', '~> 4.4'
+
+3. bundle install
+4. git status
+git add .
+git commit -m "installed devise gem"
+git push origin authentication

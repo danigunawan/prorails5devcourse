@@ -1,0 +1,101 @@
+REFF:
+==============
+integrasi virtual atribut untuk ekstraksi nama awal dan akhir dari user.
+
+# example extract :
+self.name.split.first # User.last => John Smith
+- irb
+
+- "John Smith".split 
+output : 
+["John", "Smith"]
+
+- "Smith, John".split(", ")
+output : 
+["John", "Smith"]
+
+- "John Smith".split
+output : 
+["John","Smith"]
+
+- "John Smith".split.first
+output :
+"John"
+
+- "John Smith".split.[0]
+output :
+"John"
+
+- [1,2,3,4].first
+output :
+1
+
+
+
+1. buka models/user.rb
+tambahkan : 
+
+   # fungsi validasi
+  validates_presence_of :name
+
+  # fungsi ekstraksi first and last name data
+  def first_name
+  	self.name.split.first
+  end
+
+  def last_name
+  	self.name.split.last
+  end
+end
+
+
+sehingga : 
+
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
+  # fungsi validasi
+  validates_presence_of :name
+
+  # fungsi ekstraksi first and last name data
+  def first_name
+  	# self.name.split[0] atau
+  	self.name.split.first
+  end
+
+  def last_name
+  	# self.name.split[1] atau
+  	self.name.split.last
+  end
+end
+
+
+2. rails c
+u = User.last
+u.first_name
+u.last_name
+u.update!(name: "Cher")
+
+3. buka app/views/pages/home.html.erb
+- tambahkan : 
+
+<h1>Hi, <%= current_user.first_name if current_user %></h1>
+
+- sehingga : 
+
+<h1>Hi, <%= current_user.first_name if current_user %></h1> # first_name diambil dari method di models/user.rb dengan fungsi split
+<p>Find me in app/views/pages/home.html.erb</p>
+<h1>Blog Posts</h1>
+<%= @posts.inspect %>
+
+<h1>Skill Posts</h1>
+<%= @skills.inspect %>
+
+4. rails c # lihat homepage hi, nama pertama anda
+
+5. git status
+git add .
+git commit -m "Completed Authentication with virtual attributes for user model"
+git push origin authentication

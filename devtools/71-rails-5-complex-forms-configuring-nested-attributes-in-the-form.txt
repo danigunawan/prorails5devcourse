@@ -39,7 +39,7 @@ end
 2. buka views/portfolios/new.html.erb
 
 - tambahkan setelah label body:
-dibawah ini membuat nested attributes untuk 3x input pada model portfolios has many technology, akan muncul 3 input karena 
+dibawah ini membuat nested attributes untuk input data pada model portfolios dan has many technology, akan muncul 3 input karena 
 diset pada portfolios_controller : 3.times { @portfolio_item.technologies.build } #pada loop foreach akan ada 3x times/input
 
 <ul>
@@ -111,11 +111,25 @@ sehingga :
 <% end %>
 <%#=@portfolio_item.inspect %>
 
-
-======
-4. buka views/portfolios/edit.html.erb
+4. kita akan edit 3 nested atributes tadi dalam satu update di portfolios controller
+buka views/portfolios/edit.html.erb
 kita akan membuat input edit untuk nested 3 input atributes tadi agar bisa diedit dan update
 
+# cari sendiri caranya yg update :P
 
-4. git add .
+5. git status
+git add .
+git commit -m "Implemented form configuration for nested attributes"
+git push origin data-feature
 
+6. buka git pada https://github.com/danigunawan/prorails5devcourse/tree/data-feature
+- klik compare & pull request
+- lalu isikan
+  # implemented validations
+  # created db relationships
+  # implemented nested atribute forms
+  # created customs scope
+- merge pull request, lalu ok
+
+- git checkout master
+- git pull

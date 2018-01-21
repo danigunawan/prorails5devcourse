@@ -4,7 +4,7 @@
 4. rails new my_fast_app --skip-keeps # ini tanpa file .keep
 5. rails new my_fast_app --api -T # ini membuat aplikasi api tanpa test file resources
 6. membuat otomatis database dan migrate
-rails db:create && rails db:migrate
+rails db:create && rails db:migrate atau rails db:setup
 # membuat resources scaffold post
 rails g scaffold Post name:string body:text
 rails db:migrate
