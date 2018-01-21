@@ -1,0 +1,162 @@
+REFF:
+====================
+
+menambahkan custom atribut untuk devise basis auth system
+
+1. buka views/devise/registrations/edit.html.erb
+- tambahkan : 
+
+ <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+- sehingga : 
+
+<h2>Edit <%= resource_name.to_s.humanize %></h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
+    <%= f.password_field :password, autocomplete: "off" %>
+    <% if @minimum_password_length %>
+      <br />
+      <em><%= @minimum_password_length %> characters minimum</em>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+    <%= f.password_field :current_password, autocomplete: "off" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Update" %>
+  </div>
+<% end %>
+
+<h3>Cancel my account</h3>
+
+<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+
+<%= link_to "Back", :back %>
+
+
+2. buka views/devise/registrations/new.html.erb
+
+- tambahkan : 
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+- sehingga : 
+
+<h2>Sign up</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<%= devise_error_messages! %>
+
+<div class="field">
+  <%= f.label :email %><br />
+  <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+</div>
+
+<div class="field">
+  <%= f.label :name %><br />
+  <%= f.text_field :name %>
+</div>
+
+<div class="field">
+  <%= f.label :password %>
+  <% if @minimum_password_length %>
+  <em>(<%= @minimum_password_length %> characters minimum)</em>
+  <% end %><br />
+  <%= f.password_field :password, autocomplete: "off" %>
+</div>
+
+<div class="field">
+  <%= f.label :password_confirmation %><br />
+  <%= f.password_field :password_confirmation, autocomplete: "off" %>
+</div>
+
+<div class="actions">
+  <%= f.submit "Sign up" %>
+</div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+
+# pada script diatas menambahkan input field name untuk register 
+
+3. rails s dan coba daftar pastikan sukes
+
+4. buka app/controllers/application_controller.rb
+- tambahkan : 
+  
+  before_filter :configure_permitted_parameters, if: :devise_controller? # fungsi ini untuk konfigurasi parameter yang dipermitted pada devise controller 
+
+- dan :
+
+  def configure_permitted_parameters
+  	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  end
+
+# fungsi/method diatas ini untuk konfigurasi parameternya yang ditambah tadi pada form input field
+yakni name, jadi ketika sudah register otomatis field name akan terinsert pada database, dan pada edit-update pun akan ter select/dan terubah value name tersebut
+
+- sehingga :
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  before_filter :configure_permitted_parameters, if: :devise_controller?
+
+  def configure_permitted_parameters
+  	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  end
+
+end
+
+## JIKA ERROR undefined method `before_filter' for ApplicationController:Class Did you mean? before_action
+
+- Solusi ubah : 
+
+before_filter :configure_permitted_parameters, if: :devise_controller?
+ 
+end
+
+- menjadi : 
+
+before_action :configure_permitted_parameters, if: :devise_controller?
+
+5. git status
+git add .
+git commit -m "added new parameters for user registration and editing account"
+git push origin authentication

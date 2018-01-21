@@ -1,6 +1,6 @@
 REFF:
 =================
-aktifkan user untuk logout diview secara dinamis konten
+tujuan bahasan mengaktifkan fitur user untuk login, logout, signup diview secara dinamis konten
 
 1.  buka app/views/layouts/application.html.erb
 pada session ruby on rails diperlukan inisialisasi csrf token untuk login/out/signup berada pada view yang bersangkutan, 
@@ -55,8 +55,8 @@ rake routes | grep user
 	<% if current_user %>
 	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
 	<% else %>
-	<%= link_to "Register", new_user_registration_path, method: :delete %>
-	<%= link_to "Login", new_user_session_path, method: :delete %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
 	<% end %>
 
 
@@ -79,8 +79,8 @@ rake routes | grep user
 	<% if current_user %>
 	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
 	<% else %>
-	<%= link_to "Register", new_user_registration_path, method: :delete %>
-	<%= link_to "Login", new_user_session_path, method: :delete %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
 	<% end %>
 	
 	<%= yield %>
@@ -89,4 +89,6 @@ rake routes | grep user
 
 3. rails s # coba login logout dan register maka akan sesuai kondisi seperti logic diatas tadi
 4. git status
-
+git add .
+git commit -m "Implemented logout functionality and dynamic view rendering for auth"
+git push origin authentication
