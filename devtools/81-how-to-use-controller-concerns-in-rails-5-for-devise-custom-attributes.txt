@@ -80,3 +80,8 @@ end
 
 3. rails s # coba signup, login, edit-update pastikan field name tadi berubah dan fungsi permitted parameters devise sama seperti cara tanpa concerns sebelumnya
 
+4. git status
+git add .
+git commit -m ""
+git commit -m "Added controller concerns for devise params"
+git push origin authentication
