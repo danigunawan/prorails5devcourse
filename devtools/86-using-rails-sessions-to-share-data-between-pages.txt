@@ -1,6 +1,6 @@
 REFF:
 ==================
-menggunalam session untuk share data diantara halaman
+menggunakan session untuk share data parameter diantara halaman
 
 1. buka app/controllers/application_controller.rb
 
