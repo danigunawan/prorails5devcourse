@@ -1,0 +1,391 @@
+REFF:
+==============
+belajar multiple layouts pada rails 5
+
+1. buat file blog.html.erb di views/layouts/blog.html.erb
+
+copy dari application.html.erb ke blog.html.erb :
+
+sehingga : 
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'blogs', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+	
+	<%= yield %>
+	
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+2. buka controllers/blogs_controller.rb
+tambahkan : 
+
+layout "blog"
+
+# sehingga :
+
+class BlogsController < ApplicationController
+  before_action :set_blog, only: [:show, :edit, :update, :destroy, :toggle_status] # sebelum aksi show edit update destroy memanggil call back dulu yakni set_blog
+  layout "blog"
+
+  # GET /blogs
+  # GET /blogs.json
+  def index
+    @blogs = Blog.all
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+  # GET /blogs/1
+  # GET /blogs/1.json
+  def show
+    @page_title = @blog.title # @blog diambil dari def set_blog yaitu @blog = Blog.friendly.find(params[:id])
+    @seo_keywords = @blog.body
+  end
+
+  # GET /blogs/new
+  def new
+    @blog = Blog.new
+  end
+
+  # GET /blogs/1/edit
+  def edit
+  end
+
+  # POST /blogs
+  # POST /blogs.json
+  def create
+    @blog = Blog.new(blog_params)
+
+    respond_to do |format|
+      if @blog.save # jika save maka akan muncul notice dibawah ini
+        format.html { redirect_to @blog, notice: 'Blog was successfully created.' }
+        format.json { render :show, status: :created, location: @blog }
+      else # jika engga maka dibawah ini
+        format.html { render :new }
+        format.json { render json: @blog.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /blogs/1
+  # PATCH/PUT /blogs/1.json
+  def update
+    respond_to do |format|
+      if @blog.update(blog_params)
+        format.html { redirect_to @blog, notice: 'Blog was successfully updated.' }
+        format.json { render :show, status: :ok, location: @blog }
+      else
+        format.html { render :edit }
+        format.json { render json: @blog.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /blogs/1
+  # DELETE /blogs/1.json
+  def destroy
+    @blog.destroy
+    respond_to do |format|
+      format.html { redirect_to blogs_url, notice: 'Blog was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
+  def toggle_status
+    # byebug
+    if @blog.draft? # akan berganti status publish ketika masih status draft
+      @blog.published! 
+    else @blog.published? # akan berganti status draft ketika masih status publish
+      @blog.draft!
+    end
+    redirect_to blogs_url, notice: 'Post Status has been updated.'
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    # Callback function adalah function yang dibuat dan dieksekusi didalam function lain (function yang memanggilnya)
+    def set_blog
+      @blog = Blog.friendly.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def blog_params
+      params.require(:blog).permit(:title, :body)
+    end
+end
+
+
+3. buka assets\stylesheets\blogs.scss
+tambahkan :
+
+body {
+	background-color: grey;
+}
+
+sehingga : 
+
+// Place all the styles related to the Blogs controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+	background-color: grey;
+}
+
+4. buka stylesheets/application.css 
+
+nonaktifkan :
+
+ *= require_tree .
+ *= require_self
+
+sehingga :
+
+ * require_tree .
+ * require_self
+
+5. coba buka localhost:3000/blogs
+# jika error :
+ 
+Sprockets::Rails::Helper::AssetNotPrecompiled in Blogs#index
+
+- solusi buka config\initializers\assets.rb
+tambahkan :
+
+Rails.application.config.assets.precompile += %w( blogs.css )
+
+sehingga :
+
+# Be sure to restart your server when you modify this file.
+
+# Version of your assets, change this if you want to expire all your assets.
+Rails.application.config.assets.version = '1.0'
+
+# Add additional assets to the asset load path.
+# Rails.application.config.assets.paths << Emoji.images_path
+# Add Yarn node_modules folder to the asset load path.
+Rails.application.config.assets.paths << Rails.root.join('node_modules')
+
+# Precompile additional assets.
+# application.js, application.css, and all non-JS/CSS in the app/assets
+# folder are already added.
+# Rails.application.config.assets.precompile += %w( admin.js admin.css )
+
+Rails.application.config.assets.precompile += %w( blogs.scss )
+
+6. coba ulang rails s
+localhost:3000/blogs # pastikan sukses
+
+7. buat portfolio.html.erb di \app\views\layouts\portfolio.html.erb
+
+copy isi dari application.html.erb ke portfolio.html.erb, sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'portfolios', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+	
+	<%= yield %>
+	
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+8. buka controllers/portfolios_controller.rb
+tambahkan : 
+
+layout "portfolio"
+
+sehingga :
+
+class PortfoliosController < ApplicationController
+	layout "portfolio"
+	def index
+		@portfolio_items = Portfolio.all
+		# @portfolio_items = Portfolio.where(subtitle: 'Ruby On Rails')
+		# @portfolio_items = Portfolio.angular # dari method self.angular dari model portfolio.rb
+		# @portfolio_items = Portfolio.ruby_on_rails_portfolio_items # dari scope dari model portfolio.rb
+	end
+
+	def angular
+		@angular_portfolio_items = Portfolio.angular # dari method self.angular di model portfolio.rb 
+	end
+
+	def show
+	end
+
+	def new
+		@portfolio_item = Portfolio.new
+		3.times { @portfolio_item.technologies.build }
+	end
+
+	def create
+	@portfolio_item = Portfolio.new(portfolio_params)  #pakai params.require(:portfolio).permit(:title, :subtitle, :body) supaya aman 
+	
+	respond_to do |format|
+		if @portfolio_item.save 
+      	format.html { redirect_to portfolios_path, notice: 'Portfolio was successfully created.' } #portolios_path dari routes prefix
+      	format.json { render :show, status: :ok, location: @portfolio_item }
+      else
+      	format.html { render :new }
+      	format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+      end
+  end
+end
+
+def edit
+	@portfolio_item = Portfolio.find(params[:id])	
+end
+
+def update
+	@portfolio_item = Portfolio.find(params[:id])
+	respond_to do |format|
+		# if @portfolio_item.update(params.require(:portfolio).permit(:title, :subtitle, :body))
+		if @portfolio_item.update(portfolio_params)
+			format.html { redirect_to portfolios_path, notice: 'Portfolios was successfully updated.' }
+			format.json { render :show, status: :ok, location: @portfolio_item }
+		else
+			format.html { render :edit }
+			format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+		end
+	end
+end
+
+def show
+	@portfolio_item = Portfolio.find(params[:id])
+end
+
+def destroy
+	# perform the lookup
+	@portfolio_item = Portfolio.find(params[:id])
+
+	# destroy/delete  the record
+	@portfolio_item.destroy
+
+	#redirect
+	respond_to do |format|
+		format.html { redirect_to portfolios_url, notice: 'Record was removed.' }
+	end
+end
+
+private
+
+def portfolio_params
+	params.require(:portfolio).permit(:title, 
+									  :subtitle, 
+									  :body, 
+									  technologies_attributes: [:name]
+									  )
+end
+
+end
+
+
+9. buka \app\assets\stylesheets\portfolios.scss
+
+tambahkan : 
+
+body {
+	background-color: black;
+	color: white;
+}
+
+sehingga :
+
+// Place all the styles related to the Portfolios controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+	background-color: black;
+	color: white;
+}
+
+10. buka config\initializers\assets.rb
+tambahkan :
+
+Rails.application.config.assets.precompile += %w( portfolios.css )
+
+sehingga :
+
+# Be sure to restart your server when you modify this file.
+
+# Version of your assets, change this if you want to expire all your assets.
+Rails.application.config.assets.version = '1.0'
+
+# Add additional assets to the asset load path.
+# Rails.application.config.assets.paths << Emoji.images_path
+# Add Yarn node_modules folder to the asset load path.
+Rails.application.config.assets.paths << Rails.root.join('node_modules')
+
+# Precompile additional assets.
+# application.js, application.css, and all non-JS/CSS in the app/assets
+# folder are already added.
+# Rails.application.config.assets.precompile += %w( admin.js admin.css )
+Rails.application.config.assets.precompile += %w( blogs.scss )
+Rails.application.config.assets.precompile += %w( portfolios.scss )
+
+11. rails s ulang
+pastikan halaman portfolios dan blog ada perubahan sesuai css
+
+12. git status
+git add .
+git commit -m "Added custom layouts for blogs and portfolios"
+git push origin view

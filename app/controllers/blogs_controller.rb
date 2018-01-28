@@ -1,5 +1,6 @@
 class BlogsController < ApplicationController
   before_action :set_blog, only: [:show, :edit, :update, :destroy, :toggle_status] # sebelum aksi show edit update destroy memanggil call back dulu yakni set_blog
+  layout "blog"
 
   # GET /blogs
   # GET /blogs.json
