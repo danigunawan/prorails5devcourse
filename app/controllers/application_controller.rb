@@ -21,5 +21,6 @@ class ApplicationController < ActionController::Base
   # end
 
   include SetSource # diambil dari nama class set_source.rb module SetSource
+  include CurrentUserConcern
 
 end
