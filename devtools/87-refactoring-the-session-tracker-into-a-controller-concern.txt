@@ -1,0 +1,103 @@
+REFF:
+=============
+1. buka controllers/application_controller.rb
+- hapus atau comment bagian :
+
+  before_action :set_source
+
+  def set_source
+  	session[:source] = params[:q] if params[:q]
+  end
+
+- sehingga : 
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+
+2. tambah file set_source.rb di controllers/concerns/set_source.rb
+isikan : 
+
+- pindahkan yang comment ini :
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+- sehingga pada set_source.rb : 
+
+module SetSource
+  
+  extend ActiveSupport::Concern
+  
+  included do
+		before_action :set_source
+	end
+
+  def set_source
+  	session[:source] = params[:q] if params[:q]
+  end
+
+end
+
+3. buka controllers/application_controller.rb
+
+- tambahkan :
+
+include SetSource # diambil dari nama class set_source.rb module SetSource
+
+- sehingga : 
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+
+end
+
+4. rails s
+
+buka localhost:3000/blogs?q=facebook
+
+- pastikan muncul parameter dari hasil :
+
+session[:source] = params[:q] if params[:q]
+
+- dan hasil dari panggilan parameter di view application.html.erb
+
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+output : 
+
+thanks for visiting me from facebook # facebook dari hasil passing parameter q= facebook tadi di url
+
+
+5. git status
+git add .
+git commit -m "Refactored application controller to include concern for source feature"
+git push origin controller

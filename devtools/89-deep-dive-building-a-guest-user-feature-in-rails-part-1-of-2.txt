@@ -1,0 +1,244 @@
+REFF:
+===============
+mendalami devise utk menerapkan / membuat user guest feature pada rails 5
+
+
+## PART 1
+
+Contoh kasus :
+
+ketika guest belum login maka :
+
+Hi, 
+
+ketika sudah login : 
+
+Hi, Jordan 
+
+diambil dari : 
+
+<h1>Hi, <%= current_user.first_name if current_user %></h1>
+
+
+1. buka controllers/application_controller.rb
+tambah : 
+
+  def current_user
+  	super
+  end
+
+sehingga : 
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+
+  def current_user
+  	super
+  end
+
+end
+
+# PART 2
+
+2. gem install pry
+false || true # true
+false || false # false
+fales && true # false
+
+super || guest_user
+
+require 'ostruct' # true
+
+guest = OpenStruct.new(name: "Jordan Hudgens", first_name: "Jordan", last_name: "Hudgens", email: "asdf@asdf.com")
+guest.name # Jordan Hudgens
+guest.first_name # Jordan
+
+3.buka controllers/application_controller.rb
+ubah pada :
+
+  def current_user
+  	super
+  end
+
+menjadi :
+
+  def current_user
+  	super || OpenStruct.new(name: "Guest User", first_name: "Guest", last_name: "User", email: "guest@asdf.com")
+  end
+
+# jadi ketika sudah login maka yang dipakai adalah nama anda akun anda 
+# jika logout maka akan dipakai openstruct diatas yakni guest name
+# coba saja login logout dia akan mengubah jenis constrcut <h1>Hi, <%= current_user.first_name if current_user %></h1> guest atau bukan
+
+3. pry
+require 'ostruct' # true
+name = OpenStruct.new(name: "Guest User", first_name: "Guest", last_name: "User", email: "guest@asdf.com")
+name.is_a?(OpenStruct) # true
+name.class # OpenStruct
+asdasdas.class # string
+
+4. buka views/pages/home.html.erb
+tambahkan :
+
+<p><%= current_user.class %></p>
+
+sehingga : 
+
+<h1>Hi, <%= current_user.first_name if current_user %></h1>
+<p>Find me in app/views/pages/home.html.erb</p>
+<h1>Blog Posts</h1>
+<%= @posts.inspect %>
+
+<h1>Skill Posts</h1>
+<%= @skills.inspect %>
+<p><%= current_user.class %></p> # jika login maka classnya User jika logout dia OpenStruct
+
+5. buka views/layouts/application.html.erb
+ubah :
+
+<% if current_user %>
+
+menjadi :
+
+<% if current_user.is_a?(User) %>
+
+6. buka views/pages/home.html.erb
+ubah :
+
+<h1>Hi, <%= current_user.first_name if current_user %></h1>
+
+menjadi : 
+
+<h1>Hi, <%= current_user.first_name %></h1>
+
+7. buka application_controller.rb
+tambahkan Curent User concern module :
+
+include CurrentUserConcern # disini kita akan memasukan fungsi def current_user dan ekstend concern kedalam concerns agar tertata rapih dan hanya kita panggil menggunakan include CurrentUserConcern pada application_controller.rb
+
+sehingga : 
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+  include CurrentUserConcern
+
+  def current_user
+  	super || OpenStruct.new(name: "Guest User", first_name: "Guest", last_name: "User", email: "guest@asdf.com")
+  end
+
+end
+
+8. buat file current_user_concern.rb di controllers/concerns/current_user_concern.rb
+
+- buka concerns/set_source.rb
+copy :
+
+extend ActiveSupport::Concern
+
+# ke : concerns/current_user_concern.rb
+
+- sehingga isi dari current_user_concern.rb : 
+
+module CurrentUserConcern
+	extend ActiveSupport::Concern
+end
+
+- buka application_controller.rb
+
+# cut/pindahkan :
+
+  def current_user
+  	super || OpenStruct.new(name: "Guest User", first_name: "Guest", last_name: "User", email: "guest@asdf.com")
+  end
+
+# ke concerns/current_user_concern.rb, sehingga :
+
+module CurrentUserConcern
+	extend ActiveSupport::Concern
+
+	def current_user
+		super || OpenStruct.new(name: "Guest User", first_name: "Guest", last_name: "User", email: "guest@asdf.com")
+	end
+end
+
+Ket : artinya kita akan memindahkan fungsi current_user kedalam concerns bundle agar tertata rapih
+
+
+9. buka current_user_concern.rb di concerns/current_user_concern.rb
+
+kita sederhanakan lagi menjadi 2 method current_user dan guest_user agar mudah dibaca :
+
+- ubah :
+
+module CurrentUserConcern
+	extend ActiveSupport::Concern
+
+	def current_user
+		super || OpenStruct.new(name: "Guest User", first_name: "Guest", last_name: "User", email: "guest@asdf.com")
+	end
+end
+
+# menjadi : 
+
+module CurrentUserConcern
+	extend ActiveSupport::Concern
+
+	def current_user
+		super || guest_user
+	end
+
+	def guest_user
+		OpenStruct.new(name: "Guest User", 
+					   first_name: "Guest", 
+					   last_name: "User", 
+					   email: "guest@asdf.com"
+					   )
+	end
+end
+
+10. git status
+git add .
+git commit -m "Added Guest user for current_user"
+git push origin controller

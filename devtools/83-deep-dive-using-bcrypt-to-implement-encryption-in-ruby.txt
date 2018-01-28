@@ -1,0 +1,20 @@
+REFF:
+https://github.com/codahale/bcrypt-ruby
+https://github.com/pry/pry
+================
+tujuan implementasi enkripsi bcrypt pada ruby
+
+1. gem install pry
+gem install bcrypt
+
+2. pry # pengganti alternative irb
+require 'bcrypt'
+ssn = BCrypt::Password.create("5555555555")
+ssn
+ssn == "5555555555" # true
+ssn == "555555555"  # false
+
+"asdf" == "asdfasdfa" # false
+phone = BCrypt::Password.create("555-555-5555", cost: 4)
+rand 100 # 29
+salt = BCrypt::Engine.generate_salt
