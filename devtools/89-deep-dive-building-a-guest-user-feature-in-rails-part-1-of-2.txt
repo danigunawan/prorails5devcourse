@@ -242,3 +242,20 @@ end
 git add .
 git commit -m "Added Guest user for current_user"
 git push origin controller
+
+11. buka git project dan compare and pull request pada branch controller
+https://github.com/danigunawan/prorails5devcourse/compare/controller?expand=1
+
+isikan :
+
+implemented a number of controller based functionality such as :
+
+- Null object pattern
+- Additional helper concerns for users
+- Strong param refactor for portfolio
+- Added session tracker
+
+12. klik merge pull request
+
+13. git checkout master
+14. git pull
