@@ -22,5 +22,6 @@ class ApplicationController < ActionController::Base
 
   include SetSource # diambil dari nama class set_source.rb module SetSource
   include CurrentUserConcern
+  include DefaultPageContent
 
 end

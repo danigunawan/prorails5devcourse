@@ -1,0 +1,283 @@
+REFF:
+===================
+set versi ruby anda
+rvm 2.4.0
+==================
+
+buat branch baru
+1. git checkout -b view
+2. buka controllers/application_controller.rb
+tambahkan :
+
+  before_action :set_title
+  def set_title
+  	@page_title = "Devcamp Portfolio | My Portfolio Website"
+  end
+
+sehingga : 
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+  include CurrentUserConcern
+
+  before_action :set_title
+  def set_title
+  	@page_title = "Devcamp Portfolio | My Portfolio Website"
+  end
+  
+end
+
+3. buka views/layouts/application.html.erb
+
+# ubah tag title menjadi :
+
+<title><%= @page_title %></title>
+
+4. buka blogs_controller.rb
+
+jika kita buat method set_title pada application_controller.rb akan di otomatis
+eksekusi oleh controller lainnya seperti blog_controllers.rb portfolios_controller.rb
+saat diakses halaman url prefix nya.
+
+namun jika kita hanya ingin menentukan set_title secara custom per controller akan
+mengoveride @page_title = yang ada di application_controller.rb dan akan mengeksekusi
+yang ada di method def index pada blogs_controller. maka buka controller bersangkutan, dsini saya akan memberi contoh blogs_controller.rb
+
+# tambahkan pada method/action def index blogs_controller.rb :
+
+@page_title = "Dani Portfolio | My Portfolio Website"
+
+# sehingga :
+
+  # GET /blogs
+  # GET /blogs.json
+  def index
+    @blogs = Blog.all
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+maka saat mengakses halaman localhost:3000/blogs #  akan mengganti url title "Dani Portfolio | My Blog Website"
+
+5. buka blogs_controller.rb
+tambahkan pada def show : 
+
+ @page_title = @blog.title
+
+sehingga : 
+
+  def show
+    @page_title = @blog.title # @blog diambil dari def set_blog yaitu @blog = Blog.friendly.find(params[:id])
+  end
+
+6. buat file default_page_content.rb di controllers/concerns/default_page_content.rb
+
+- buka application_controller.rb
+cut/pindahkan :
+
+  before_action :set_title
+  def set_title
+  	@page_title = "Dani Portfolio | My Portfolio Website"
+  end
+
+# ke concerns/default_page_content.rb :
+
+sehingga : 
+
+module DefaultPageContent
+	extend ActiveSupport::Concern
+
+	included do
+		before_action :set_page_defaults
+	end
+
+	def set_page_defaults
+		@page_title = "Dani Portfolio | My Portfolio Website"
+	end
+end
+
+7. buka controllers/application_controller.rb
+- tambahkan :
+
+include DefaultPageContent
+
+- sehingga : 
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+  include CurrentUserConcern
+  include DefaultPageContent
+
+end
+
+8. buka concerns/default_page_content.rb (SEO KEYWORDS)
+- tambahkan seo keywords pada def set_page_defaults :
+
+@seo_keywords = "Dani Gunawan"
+
+sehingga :
+
+	def set_page_defaults
+		@page_title = "Dani Portfolio | My Portfolio Website"
+		@seo_keywords = "Dani Gunawan"
+	end
+
+- buka layouts/application_html.erb
+
+tambahkan meta tag keywords :
+
+<meta name="keywords" content="<%= @seo_keywords %>" />
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+	
+	<%= yield %>
+	
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+9. SEO meta tags keywords pada blogs_controller.rb
+- buka blogs_controller.rb
+tambahkan pada def show :
+
+@seo_keywords = @blog.body
+
+sehingga :
+
+  # GET /blogs/1
+  # GET /blogs/1.json
+  def show
+    @page_title = @blog.title # @blog diambil dari def set_blog yaitu @blog = Blog.friendly.find(params[:id])
+    @seo_keywords = @blog.body
+  end
+
+## PART 2 ##
+
+10. rake routes | grep pages
+
+? rake routes | grep pages
+                   about GET    /about(.:format)                   pages#about
+                 contact GET    /contact(.:format)                 pages#about
+                    root GET    /                                  pages#home
+
+11. buka application.html.erb
+tambahkan :
+
+<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+</div>
+
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+	
+	<%= yield %>
+	
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+12. git status
+git add .
+git commit -m "Added nav bar and added default header content"
+git push origin view
