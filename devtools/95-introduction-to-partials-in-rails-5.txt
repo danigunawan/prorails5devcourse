@@ -1,0 +1,111 @@
+REFF:
+================
+belajar renders partial di rails 5
+
+1. buat folder shared di views/shared
+
+2. buat file _nav.html.erb di views/shared/_nav.html.erb
+
+- buka layouts/application.html.erb
+
+# cut/pindahkan code ini :
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div> 
+
+# ke views/shared/_nav.html.erb : 
+
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+3. buka layouts/application.html.erb
+
+tambahkan :
+
+<%= render "shared/nav" %>
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<%= render "shared/nav" %>
+	
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+	
+	<%= yield %>
+	
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+4. lalu pada layouts/blog.html.erb
+
+- hapus code ini :
+
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+
+- ganti dengan :
+
+<%= render "shared/nav" %>
+
+
+5. lalu pada layouts/portfolio.html.erb
+
+- hapus code ini :
+
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+
+- ganti dengan :
+
+<%= render "shared/nav" %>
+
+6. git status
+git add .
+git commit -m "Implemented partial for the nav component"
+git push origin view
+
+
+
