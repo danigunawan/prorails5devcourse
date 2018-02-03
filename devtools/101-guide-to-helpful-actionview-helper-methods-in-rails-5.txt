@@ -117,6 +117,4 @@ git push origin view
 git checkout master
 git merge view
 git push
-
-4. 
  
