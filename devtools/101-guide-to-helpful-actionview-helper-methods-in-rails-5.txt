@@ -1,0 +1,122 @@
+REFF:
+===============
+
+1. buka views/blog/index.html.erb
+
+tambah kolom date 
+
+- ubah :
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Body</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= render @blogs %>
+  </tbody>
+</table>
+
+- sehingga :
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Date</th>
+      <th>Body</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= render @blogs %>
+  </tbody>
+</table> 
+
+2. buka views/blogs/_blog.html.erb
+tambah kolom created_at / date
+
+- ubah :
+
+<tr>
+	<td><%= blog.title.upcase %></td>
+	<td><%= blog.body %></td>
+	<td><%= link_to blog.status, toggle_status_blog_path(blog) %></td>
+	<td><%= link_to 'Show', blog %></td>
+	<td><%= link_to 'Edit', edit_blog_path(blog) %></td>
+	<td><%= link_to 'Delete Post', blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>
+
+- menjadi :
+
+<tr>
+	<td><%= blog.title.upcase %></td>
+	<td><%= blog.created_at %></td>
+	<td><%= blog.body %></td>
+	<td><%= link_to blog.status, toggle_status_blog_path(blog) %></td>
+	<td><%= link_to 'Show', blog %></td>
+	<td><%= link_to 'Edit', edit_blog_path(blog) %></td>
+	<td><%= link_to 'Delete Post', blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr><tr>
+	<td><%= blog.title.upcase %></td>
+	<td><%= blog.created_at %></td>
+	<td><%= blog.body %></td>
+	<td><%= link_to blog.status, toggle_status_blog_path(blog) %></td>
+	<td><%= link_to 'Show', blog %></td>
+	<td><%= link_to 'Edit', edit_blog_path(blog) %></td>
+	<td><%= link_to 'Delete Post', blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>
+
+- konvert menjadi sejak berapa hari di buat :
+
+<%= distance_of_time_in_words(blog.created_at, Time.now) %> ago
+
+sehingga : 
+
+<tr>
+	<td><%= blog.title.upcase %></td>
+	<td><%= distance_of_time_in_words(blog.created_at, Time.now) %> ago</td>
+	<td><%= blog.body %></td>
+	<td><%= link_to blog.status, toggle_status_blog_path(blog) %></td>
+	<td><%= link_to 'Show', blog %></td>
+	<td><%= link_to 'Edit', edit_blog_path(blog) %></td>
+	<td><%= link_to 'Delete Post', blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>
+
+
+3. buka views/pages/contact.html.erb
+
+merubah angka menjadi format nomor telepon
+
+tambahkan :
+
+<p><%= number_to_phone "55555555555" %></p>
+
+sehingga :
+
+
+<h1>Pages#contact</h1>
+<p>Find me in app/views/pages/contact.html.erb</p>
+
+<p><%= number_to_phone "55555555555" %></p>
+<p><%= number_to_currency "150" %></p>
+<p><%= number_to_percentage "80.4" %></p>
+<p><%= number_with_delimiter "10000000000" %></p>
+
+4. git status
+git add .
+git commit -m "Integrated helper methods from ActionView"
+git push origin view
+
+## nanti aja
+git checkout master
+git merge view
+git push
+
+4. 
+ 

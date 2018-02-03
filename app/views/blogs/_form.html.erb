@@ -17,6 +17,11 @@
   </div>
 
   <div class="field">
+    <%= form.label :topic_id %>
+    <%= form.text_field :topic_id, id: :topic_id %>
+  </div>
+
+  <div class="field">
     <%= form.label :body %>
     <%= form.text_area :body, id: :blog_body %>
   </div>

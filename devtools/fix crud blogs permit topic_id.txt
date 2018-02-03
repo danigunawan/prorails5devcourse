@@ -1,0 +1,25 @@
+### PERBAIKAN CRUD CREATE, UPDATE, DELETE BLOGS BELONGSTO TOPIC ###
+
+1. buka model blog.rb
+tambahkan :topic_id pada validasi sehingga :
+
+validates_presence_of :title, :body, :topic_id
+
+2. buka blogs_controller.rb
+
+tambahkan pada blog_params permit topic_id, sehingga :
+
+ def blog_params
+      params.require(:blog).permit(:title, :body, :topic_id)
+ end
+
+3. buka partial form untuk new blog di views/blogs/_form.html.erb
+
+tambahkan input field untuk topic_id:
+
+<div class="field">
+    <%= form.label :topic_id %>
+    <%= form.text_field :topic_id, id: :topic_id %>
+  </div>
+
+4. rails s coba create dan edit blogs # pastikan berhasil
