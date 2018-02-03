@@ -11,4 +11,23 @@ module ApplicationHelper
 			  (link_to "Login", new_user_session_path)
 			 end
 		end
+
+	def sample_paragraf
+		content_tag(:div, "My Contentss", class: "my-class")
 	end
+
+	def source_helper(layout_name)
+		if session[:source]
+			# cara 1
+			#"<p>thanks for visiting me from #{session[:source]}</p>"
+			
+			# cara 2
+			# content_tag(:p, "thanks for visiting me from #{session[:source]}")
+			
+			# cara 3
+			 greeting = "thanks for visiting me from #{session[:source]} and kamu ada di layout #{layout_name}"
+			 content_tag(:p, greeting, class: "source-greeting")
+		end
+	end
+
+end
