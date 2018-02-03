@@ -1,0 +1,279 @@
+REFF:
+
+==============
+cara menggunakan helpers untuk views di rails 5
+
+
+####### CONTOH 1 ########################
+1. buka helpers/application_helper.rb
+# pada :
+
+module ApplicationHelper
+end
+
+
+# tambahkan method sample_helper sehingga :
+
+
+module ApplicationHelper
+	def sample_helper
+		"<p>My Helper</p>".html_safe # fungsi html_safe agar bisa menggunakan tag html jika tidak dipakai maka tidak akan berfungsi tag html
+	end
+end
+
+2. buka pages/home.html.erb
+
+tambahkan :
+
+<%= sample_helper %>
+
+sehingga :
+
+
+<h1>Hi, <%= current_user.first_name if current_user %></h1>
+<p>Find me in app/views/pages/home.html.erb</p>
+<h1>Blog Posts</h1>
+<%= @posts.inspect %>
+
+<h1>Skill Posts</h1>
+<%= @skills.inspect %>
+<p><%= current_user.class %></p>
+
+<hr>
+<%= sample_helper %>
+
+3. rails s # dan lihat pada hal home page pastikan menampilkan script ini <p>My Helper</p> didapat dari method sample_helper
+
+
+
+
+####### CONTOH 2 ####################
+
+
+1. buka layouts/application.html.erb
+
+- cut/pindahkan blok html ini :
+
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+
+-  buka helpers/application_helper.rb
+# pada :
+
+module ApplicationHelper
+end
+
+
+# tambahkan method login_helper sehingga :
+
+	module ApplicationHelper
+	def sample_helper
+		"<p>My Helper</p>".html_safe # fungsi html_safe agar bisa menggunakan tag html jika tidak dipakai maka tidak akan berfungsi tag html
+	end
+
+	def login_helper
+		 if current_user.is_a?(User)
+			 link_to "Logout", destroy_user_session_path, method: :delete
+			 else
+			  link_to "Register", new_user_registration_path
+			  link_to "Login", new_user_session_path
+			 end
+		end
+	end
+
+sehingga lainnya (LINK REGISTER + LOGIN DALAM 1 BARIS):
+
+module ApplicationHelper
+	def sample_helper
+		"<p>My Helper</p>".html_safe # fungsi html_safe agar bisa menggunakan tag html jika tidak dipakai maka tidak akan berfungsi tag html
+	end
+
+	def login_helper
+		 if current_user.is_a?(User)
+			 link_to "Logout", destroy_user_session_path, method: :delete
+			 else
+			  (link_to "Register", new_user_registration_path) +
+			  (link_to "Login", new_user_session_path)
+			 end
+		end
+	end
+
+sehingga lainnya 2 :
+	def sample_helper
+		"<p>My Helper</p>".html_safe # fungsi html_safe agar bisa menggunakan tag html jika tidak dipakai maka tidak akan berfungsi tag html
+	end
+
+	def login_helper
+		 if current_user.is_a?(User)
+			 link_to "Logout", destroy_user_session_path, method: :delete
+			 else
+			  (link_to "Register", new_user_registration_path) << " | " << +
+			  (link_to "Login", new_user_session_path)
+			 end
+		end
+	end
+
+sehingga lainnya 3 :
+def sample_helper
+		"<p>My Helper</p>".html_safe # fungsi html_safe agar bisa menggunakan tag html jika tidak dipakai maka tidak akan berfungsi tag html
+	end
+
+def login_helper
+		 if current_user.is_a?(User)
+			 link_to "Logout", destroy_user_session_path, method: :delete
+			 else
+			  (link_to "Register", new_user_registration_path) + "<br>".html_safe +
+			  (link_to "Login", new_user_session_path)
+			 end
+		end
+	end
+
+-  buka layouts/application.html.erb
+tambahkan :
+
+<%= login_helper %>
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<%= render "shared/nav", location: 'top' %>
+	
+	<%= login_helper %>
+	
+	<%= yield %>
+	
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+- buka layouts/portfolio.html.erb
+
+ganti bagian ini dengan helpers login_helper :
+
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'portfolios', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<%= render "shared/nav", location: 'top' %>
+
+	<%= login_helper %>
+	
+	<%= yield %>
+	
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+
+- buka layouts/blog.html.erb
+
+ganti bagian ini dengan helpers login_helper :
+
+	<% if current_user.is_a?(User) %>
+	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
+	<% else %>
+	<%= link_to "Register", new_user_registration_path %>
+	<%= link_to "Login", new_user_session_path %>
+	<% end %>
+
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'blogs', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<%= login_helper %>
+	
+	<%= yield %>
+	
+	<%= render "shared/nav", location: 'bottom' %>
+
+	<% if session[:source] %>
+	<p>thanks for visiting me from <%= session[:source] %></p>
+	<% end %>
+
+</body>
+</html>
+
+
+3. rails s # dan lihat pada hal home page pastikan menampilkan script ini <p>My Helper</p> didapat dari method sample_helper
+
+4. git status
+git add .
+git commit -m "Implemented view helper for auth links"
+git push origin view
+
+
+## CONTOH 3 ##
+CONTOH JALANKAN METHOD MELALUI CONSOLE PRY
+
+1. pry # buka console
+
+2. coba runing code ini
+
+def sample_method
+		x= 1
+		if x = 1
+			"yay"
+		else
+			"no"
+			"something"
+		end
+	end
+
+3. sample method # pasti hasilnya yay karena x = 1
+
