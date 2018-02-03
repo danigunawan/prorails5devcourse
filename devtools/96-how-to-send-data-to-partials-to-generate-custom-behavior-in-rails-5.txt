@@ -181,3 +181,4 @@ end
 10. git status
 git add .
 git commit -m "Implemented partials with local data for portfolio form and nav bars"
+git push origin view
