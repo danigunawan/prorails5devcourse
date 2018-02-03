@@ -34,7 +34,8 @@ class PortfoliosController < ApplicationController
 end
 
 def edit
-	@portfolio_item = Portfolio.find(params[:id])	
+	@portfolio_item = Portfolio.find(params[:id])
+	#3.times { @portfolio_item.technologies.build }	# jika ingin setiap kali sudah insert nambah terus 3 input (OPTIONAL)
 end
 
 def update

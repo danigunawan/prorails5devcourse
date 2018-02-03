@@ -1,0 +1,183 @@
+REFF:
+============
+
+mengirim data partial untuk generate custom sifat dari rails
+jadi misal kita punya partial render _nav nah si nav ini bisa
+di custom sesuai dengan keinginan dari blok yang di gunakan pada layouts
+
+misal blog.html merender partial _nav ingin kita custom langsung misal dengan
+class location <div class="<%= location %>">
+
+1. buka views/shared/_nav.html.erb
+
+# ubah :
+
+	<div>
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+# menjadi :
+
+	<div class="<%= location %>">
+		<div><%= link_to "Home", root_path %></div>
+		<div><%= link_to "About", about_path %></div>
+		<div><%= link_to "Contact", contact_path %></div>
+		<div><%= link_to "Blog", blogs_path %></div>
+		<div><%= link_to "Portfolio", portfolios_path %></div>
+	</div>
+
+2. buka layouts/application.html.erb
+
+ubah :
+
+<%= render "shared/nav" %>
+
+menjadi :
+
+<%= render "shared/nav", location: 'top' %>
+
+3. buka layouts/blog.html.erb
+
+ubah :
+
+<%= render "shared/nav" %>
+
+menjadi : 
+
+<%= render "shared/nav", location: 'bottom' %>
+
+4. buka layouts/portfolio.html.erb
+
+ubah :
+
+<%= render "shared/nav" %>
+
+menjadi : 
+
+<%= render "shared/nav", location: 'top' %>
+
+5. buka stylesheets/portfolio.css
+
+tambahkan :
+
+.top a{
+	color: red;
+}
+
+
+5. buka stylesheets/blog.css
+
+tambahkan :
+
+.bottom a {
+	color: white;
+}
+
+6. buka stylesheets/application.css
+
+tambahkan :
+
+.top a{
+	color: brown;
+}
+
+7. buat file untuk render, bernama form _form.html.erb 
+di views/portfolios/_form.html.erb
+
+8. buka views/portfolios/new.html.erb
+
+- cut/pindahkan bagian blok html ini ke portfolios/_form.html.erb : 
+
+<%= form_for(@portfolio_item) do |f| %>
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subtitle %>
+    <%= f.text_area :subtitle %>
+  </div>
+
+    <div class="field">
+    <%= f.label :body %>
+    <%= f.text_area :body %>
+  </div>
+
+  <ul>
+    <%= f.fields_for :technologies do |technology_form| %> <!--technologies diambil dari model portfolio pada accepts_nested_attributes_for -->
+      <li>
+        <%= technology_form.label :name %>
+        <%= technology_form.text_field :name %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+
+- pada views/portfolios/new.html.erb tambahkan :
+
+<%= render 'form', portfolio_item: @portfolio_item %>
+
+# sehingga : 
+
+<h1>Create a new portfolio item</h1>
+
+<%= render 'form', portfolio_item: @portfolio_item %>
+
+9. buka views/portfolios/edit.html.erb
+
+hapus :
+
+<%= form_for(@portfolio_item) do |f| %>
+
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subtitle %>
+    <%= f.text_area :subtitle %>
+  </div>
+
+    <div class="field">
+    <%= f.label :body %>
+    <%= f.text_area :body %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+
+ganti menjadi :
+
+<%= render 'form', portfolio_item: @portfolio_item %> # untuk render edit 3 insert input
+
+9. buka portfolios_controller.rb
+
+tambahkan pada method edit :
+
+3.times { @portfolio_item.technologies.build }	 # agar bisa input 3 kali insert
+
+sehingga : 
+
+def edit
+	@portfolio_item = Portfolio.find(params[:id])
+	# 3.times { @portfolio_item.technologies.build }	#jika ingin setiap kali sudah insert nambah terus 3 input (OPTIONAL) 
+end
+
+10. git status
+git add .
+git commit -m "Implemented partials with local data for portfolio form and nav bars"
