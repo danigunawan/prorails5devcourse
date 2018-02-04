@@ -5,7 +5,14 @@ class BlogsController < ApplicationController
   # GET /blogs
   # GET /blogs.json
   def index
-    @blogs = Blog.all
+    #byebug
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    #byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
     @page_title = "Dani Portfolio | My Blog Website"
   end
 

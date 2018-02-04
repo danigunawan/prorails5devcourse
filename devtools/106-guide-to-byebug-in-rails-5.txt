@@ -1,0 +1,183 @@
+REFF:
+==============
+
+panduan bybug pada rails 5
+
+1. buka blogs_controller.rb
+
+pada method/action index, matikan/comment bagian puts debug ini karena 
+kita skrg belajar dengan bybug :
+
+ # puts "*" * 500
+ #puts @blogs.inspect
+ #puts "*" * 500
+
+
+sehingga : 
+
+  def index
+    # @blogs = Blog.all
+    # puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    #puts @blogs.inspect
+    #puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+
+2. pada blogs_controller.rb
+
+- setelah instance variabel @blogs :
+
+@blogs = Blog.special_blogs
+
+- tambahkan :
+
+byebug
+
+- sehingga :
+
+  def index
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+3. rails s
+4. coba buka halaman blogs / localhost:3000/blogs # akan freeze saat bydebug terproses 
+5. buka terminal akan muncul byebug debugger shell (byebug)
+- coba ketik pada (byebug)
+@blogs
+session
+continue
+
+- coba jalankan
+http://localhost:3000/blogs?q=facebook
+
+- pada bybug jalankan :
+params
+hasilnya :
+
+<ActionController::Parameters {"q"=>"facebook", "controller"=>"blogs", "action"=
+>"index"} permitted: true> 
+
+artinya ini mendebug hasil params tadi
+
+- coba jalankan :
+
+session[:source] = params[:q] # nil
+
+params[:q] # nil
+
+
+#### JIKA TIDAK INGIN DEBUG BYBUG ####
+6. pada blogs_controller.rb
+
+pada def index coba matikan bybugnya :
+
+  def index
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    #byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+- coba jalankan untuk test apakah bybug masih jalan
+http://localhost:3000/blogs?q=facebook
+http://localhost:3000/blogs?r=facebook
+
+# jika berhasil pada laman blogs akan muncul : thanks for visiting me from facebook and kamu ada di layout blog
+
+### bybug bisa di pindah pada application_controller.rb merupakan parent class nya semua si anak controller
+7. buka controllers/blogs_controller.rb
+
+- nonaktifkan bybug pada method index :
+
+  def index
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    # byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+- buka controllers/application_controller.rb
+
+tambahkan :
+
+byebug
+
+sehingga :
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+  include CurrentUserConcern
+  include DefaultPageContent
+  byebug # ini bybugnya untuk semua controller yang berjalan
+end
+
+## JIKA BYBUG DI EKSEKUSI SEBELUM INSTANCE VARIABLE
+8. buka blogs_controller.rb
+
+def index
+    byebug
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    #puts @blogs.inspect
+    #puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+- coba jalankan http://localhost:3000/blogs?q=facebook
+
+- jika di bybug :
+
+session[:source] = params[:q] # nil
+
+params[:q] # nil
+
+nil karena session belum masuk/tereksekusi dan load
+
+- coba pada (bybug)
+continue
+
+- dan coba lagi 
+
+session[:source] = params[:q]  # dia akan meng get facebook hasilnya = facebook
+params[:q] # facebook

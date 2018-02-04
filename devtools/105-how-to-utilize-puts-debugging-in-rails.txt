@@ -1,0 +1,56 @@
+REFF:
+http://nyan.catcyb.org/mengenal-ruby/
+
+=====================
+bagaimana cara utilize puts debugging di rails
+
+# Pakai project professional-rails-lima-development-course
+1. buka blogs_controller.rb
+
+pada :
+
+ def index
+    @blogs = Blog.all
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+ubah menjadi :
+
+  def index
+    # @blogs = Blog.all
+    puts "*" * 500 # untuk debug
+    @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    puts @blogs.inspect
+    puts "*" * 500 # untuk debug
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+- sambil refresh page blogs perhatikan hasil inspeksi pada terminal shell rails s yang berjalan
+akan ada hasil puts dan limit 2 tadi
+
+2. buka models/blog.rb
+tambahkan method :
+
+	def self.special_blogs # selft method/action adalah sebuah aksi dari model/class itu sendiri(self) dan bisa dipanggil hanya pada object class tersebut
+		#limit(2) # jika ini maka limit 2 data
+		all # jika ini maka all
+	end
+
+- lalu pada blogs_controller.rb
+kita hanya memanggil action method untuk @blogs = Blog.all
+
+menjadi :
+
+@blogs = Blog.special_blogs
+
+- ubah pada method index, sehingga : 
+
+  def index
+    # @blogs = Blog.all
+    puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    puts @blogs.inspect
+    puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end

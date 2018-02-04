@@ -1,0 +1,154 @@
+REFF: 
+
+============== PART 102 ==========
+
+1. buat controllers/guides_controller.rb
+
+tambahkan :  
+
+class GuidesController < ApplicationController
+   def book
+   @books = ['fountainhead', 'Deep Work', 'Rails Way']	
+   end
+end
+
+2. buat folder guides di views/guides
+
+3. buat files book.html.erb di views/guides/book.html.erb
+
+isilkan :
+
+<p>Hey aku adalah book</p>
+
+4. buka routes.rb
+tambahkan :
+
+get 'guides/book'
+
+
+========== PART 103 =============
+
+5. rails g scaffold Blog title:string body:text
+6. rails db:setup
+7. rails db:migrate
+8. buka view/blogs/index.html.erb
+
+CARA 1 - JIKA RENDER COLLECTION
+=====================================================
+## kita akan ganti menjadi render collection pada each
+
+- rubah :
+
+  <tbody>
+    <% @blogs.each do |blog| %>
+      <tr>
+        <td><%= blog.title %></td>
+        <td><%= blog.body %></td>
+        <td><%= link_to 'Show', blog %></td>
+        <td><%= link_to 'Edit', edit_blog_path(blog) %></td>
+        <td><%= link_to 'Destroy', blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+
+menjadi :
+
+  <tbody>
+    <%= render @blogs %>
+  </tbody>
+
+- buat file views/blogs/_blog.html.erb
+ 
+copas isi dari each di index.html tadi :
+
+ <tr>
+ 	<td><%= blog.title %></td>
+ 	<td><%= blog.body %></td>
+ 	<td><%= link_to 'Show', blog %></td>
+ 	<td><%= link_to 'Edit', edit_blog_path(blog) %></td>
+ 	<td><%= link_to 'Destroy', blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+ </tr>
+ 
+============END CARA 1 - JIKA RENDER COLLECTION============
+
+
+CARA 2 - JIKA RENDER COLLECTION BESERTA RULER + CACHE 
+=====================================================
+## kita akan ganti menjadi render collection pada each
+
+- rubah :
+
+  <tbody>
+    <% @blogs.each do |blog| %>
+      <tr>
+        <td><%= blog.title %></td>
+        <td><%= blog.body %></td>
+        <td><%= link_to 'Show', blog %></td>
+        <td><%= link_to 'Edit', edit_blog_path(blog) %></td>
+        <td><%= link_to 'Destroy', blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+
+menjadi 1 tanpa cache :
+
+<p id="notice"><%= notice %></p>
+
+<h1>Blogs</h1>
+
+  <div>
+     <%= render partial: @blogs, spacer_template: 'blog_ruler' %>
+  </div>
+
+<br>
+
+<%= link_to 'New Blog', new_blog_path %>
+
+
+menjadi 2 dengan cache :
+
+<p id="notice"><%= notice %></p>
+
+<h1>Blogs</h1>
+  
+<% cache do %>
+  <div>
+    <%= render partial: @blogs, spacer_template: 'blog_ruler' %>
+  </div>
+<% end %>
+
+<br>
+
+<%= link_to 'New Blog', new_blog_path %>
+
+- buat file views/blogs/_blog_ruler.html.erb
+isikan :
+
+<hr>
+
+- buat file views/blogs/_blog.html.erb
+ 
+copas isi dari each di index.html tadi :
+
+ <div>
+ 	<p><%= blog.title %></p>
+ 	<p><%= blog.body %></p>
+ 	<p><%= link_to 'Show', blog %></p>
+ 	<p><%= link_to 'Edit', edit_blog_path(blog) %></p>
+ 	<p><%= link_to 'Destroy', blog, method: :delete, data: { confirm: 'Are you sure?' } %></p>
+ </div>
+ 
+============END CARA 2 - JIKA RENDER COLLECTION BESERTA RULER + CACHE ============
+
+9. buka layouts/application.html.erb
+# Agar tampilan bootstrap
+tambahkan : 
+
+<%= stylesheet_link_tag "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" %>
+
+10. rails s 
+12. localhost:3000/blogs # pastikan bisa muncul
+13. git status
+git add .
+git commit -m "deep dive tiptricks working with actionview rails 5"
+git push origin view 
