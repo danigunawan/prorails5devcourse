@@ -1,0 +1,29 @@
+REFF:
+repl.it
+===========
+
+1. ketik pada repl.it
+
+def divide num1,num2
+begin
+  num1 / num2
+  asdsadasd
+  rescue ZeroDivisionError =>
+   puts "Error: #{e}"
+   end
+end
+
+divide 5,5 
+
+
+# pasti akan error 
+
+undefined local variable or method "asdsadasd" for main:Object
+(repl):4:in 'divide'
+(repl):10:in '<main>'
+
+
+2. git status
+git add .
+git commit -m "Implemented error management rails application part 1-2 108-107"
+git push origin master

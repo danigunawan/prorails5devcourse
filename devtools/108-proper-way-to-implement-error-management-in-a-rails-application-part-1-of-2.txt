@@ -1,0 +1,121 @@
+REFF :
+http://ruby-doc.org/core-2.2.0/Exception.html
+repl.it
+=================
+
+impmenetasi error management pada rails application.
+
+1. pry 
+def divide num1, num2
+num1/num2
+end
+
+divide 5, 5 # hasil = 1
+divide 5, 0 # hasil = ZeroDivisionError: divided by 0
+
+
+2. pry
+
+def divide num1, num2
+begin 
+num1/num2
+rescue  => e
+puts "error occured : #{e}"
+end
+end
+
+
+divide 5, 0 # Error occured : 0 # hasilnya nil
+
+
+3. pry
+def divide num1,num2
+begin
+num1/num2
+rescue
+end
+end
+
+divide 5,0 # hasilnya nil tanpa puts tadi error occured
+
+
+
+=================================================
+
+
+1. rails s
+
+2. buka model user.rb
+
+- nonaktifkan/comment :
+
+validates_presence_of :name
+
+menjadi :
+
+# validates_presence_of :name
+
+3. models/user.rb
+
+pada action first_name, ubah :
+
+  def first_name
+  	# self.name.split[0] atau
+  	self.name.split.first
+  end
+
+menjadi :
+
+  def first_name
+  	# self.name.split[0] atau
+  	self.name.split.first.oops
+  end
+
+
+- coba login 
+
+jika error : undefined method `oops' for "Dani":String
+
+# PASTI AKAN ERROR KARENA TIDAK DIKENALI oops itu method apa
+
+solusi dengan mencoba implementasi error management :
+
+pada method :
+
+  def first_name
+  	# self.name.split[0] atau
+  	self.name.split.first.oops
+  end
+
+ubah menjadi :
+  
+  #Fungsi dengan rescue (jika digunakan maka yang tadinya error karena method oops tidak ada jadi di ignore kan dan error hilang persis seperti error_reporting pada php)
+  def first_name
+  	begin
+  	# self.name.split[0] atau
+  	self.name.split.first.oops
+  rescue
+  end
+  end
+
+# fungsi rescue adalah menghindari error tadi artinya dibiarkan saja dilewati error tersebut agar
+tetap jalan dan tidak error alias ignore error.
+
+pada pengembangan sebenarnya rescue ini tidak dianjurkan karena 
+bukan prinsip yang bagus dalam pengembangan membiarkan error dilewati
+harusnya kita benahi dan benari.
+
+- coba login kembali pasti tidak error 
+
+
+
+4. pada models/user.rb
+tambahkan action/method :
+
+  def get_facebook_messages
+  	contacts_fb.oops
+  	@messages = retrieves_messages
+  rescue IOError => e
+  	flash[:error] = "Error occured contacting Facebook: #{e}"
+  end
+
