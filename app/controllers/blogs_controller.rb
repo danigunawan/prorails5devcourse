@@ -9,10 +9,14 @@ class BlogsController < ApplicationController
     # @blogs = Blog.all
     #puts "*" * 500
     # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    #binding.pry
     @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    #binding.pry
+    #@blogs = Blog.featured_blogs
     #byebug
     #puts @blogs.inspect
     #puts "*" * 500
+    #binding.pry
     @page_title = "Dani Portfolio | My Blog Website"
   end
 

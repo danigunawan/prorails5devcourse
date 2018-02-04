@@ -1,4 +1,5 @@
 class PortfoliosController < ApplicationController
+	before_action :set_portfolio_item, only: [:edit, :show, :update, :destroy]
 	layout "portfolio"
 	def index
 		@portfolio_items = Portfolio.all
@@ -9,9 +10,6 @@ class PortfoliosController < ApplicationController
 
 	def angular
 		@angular_portfolio_items = Portfolio.angular # dari method self.angular di model portfolio.rb 
-	end
-
-	def show
 	end
 
 	def new
@@ -34,12 +32,10 @@ class PortfoliosController < ApplicationController
 end
 
 def edit
-	@portfolio_item = Portfolio.find(params[:id])
 	#3.times { @portfolio_item.technologies.build }	# jika ingin setiap kali sudah insert nambah terus 3 input (OPTIONAL)
 end
 
 def update
-	@portfolio_item = Portfolio.find(params[:id])
 	respond_to do |format|
 		# if @portfolio_item.update(params.require(:portfolio).permit(:title, :subtitle, :body))
 		if @portfolio_item.update(portfolio_params)
@@ -53,12 +49,11 @@ def update
 end
 
 def show
-	@portfolio_item = Portfolio.find(params[:id])
+	#binding.pry
 end
 
 def destroy
 	# perform the lookup
-	@portfolio_item = Portfolio.find(params[:id])
 
 	# destroy/delete  the record
 	@portfolio_item.destroy
@@ -77,6 +72,10 @@ def portfolio_params
 									  :body, 
 									  technologies_attributes: [:name]
 									  )
+end
+
+def set_portfolio_item
+	@portfolio_item = Portfolio.find(params[:id])
 end
 
 end

@@ -1,0 +1,118 @@
+=> [[32m#<Blog:0x00000010e50eb0[0m
+  id: [1;34m1[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 0[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-0[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50cd0[0m
+  id: [1;34m2[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 1[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-1[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50b18[0m
+  id: [1;34m3[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 2[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-2[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50960[0m
+  id: [1;34m4[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 3[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-3[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e507d0[0m
+  id: [1;34m5[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 4[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-4[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50618[0m
+  id: [1;34m6[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 5[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m06[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-5[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50460[0m
+  id: [1;34m7[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 6[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-6[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e502d0[0m
+  id: [1;34m8[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 7[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-7[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50118[0m
+  id: [1;34m9[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 8[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-8[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50208[0m
+  id: [1;34m10[0m,
+  title: [31m[1;31m"[0m[31mMy Blog Post 9[1;31m"[0m[31m[0m,
+  body:
+   [31m[1;31m"[0m[31mLorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque molestias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessitatibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSun[0m, [1;34m14[0m [1;34;4mJan[0m [1;34m2018[0m [1;34m08[0m:[1;34m41[0m:[1;34m07[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31mmy-blog-post-9[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50708[0m
+  id: [1;34m11[0m,
+  title: [31m[1;31m"[0m[31masdasd[1;31m"[0m[31m[0m,
+  body: [31m[1;31m"[0m[31madsdas[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSat[0m, [1;34m03[0m [1;34;4mFeb[0m [1;34m2018[0m [1;34m16[0m:[1;34m40[0m:[1;34m56[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSat[0m, [1;34m03[0m [1;34;4mFeb[0m [1;34m2018[0m [1;34m16[0m:[1;34m48[0m:[1;34m12[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31masdasd[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m2[0m[32m>[0m,
+ [32m#<Blog:0x00000010e50c08[0m
+  id: [1;34m12[0m,
+  title: [31m[1;31m"[0m[31masdas[1;31m"[0m[31m[0m,
+  body: [31m[1;31m"[0m[31msadasd[1;31m"[0m[31m[0m,
+  created_at: [1;34;4mSat[0m, [1;34m03[0m [1;34;4mFeb[0m [1;34m2018[0m [1;34m16[0m:[1;34m44[0m:[1;34m52[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  updated_at: [1;34;4mSat[0m, [1;34m03[0m [1;34;4mFeb[0m [1;34m2018[0m [1;34m16[0m:[1;34m44[0m:[1;34m52[0m [1;34;4mUTC[0m [1;34m+00[0m:[1;34m00[0m,
+  slug: [31m[1;31m"[0m[31masdas[1;31m"[0m[31m[0m,
+  status: [31m[1;31m"[0m[31mdraft[1;31m"[0m[31m[0m,
+  topic_id: [1;34m3[0m[32m>[0m]

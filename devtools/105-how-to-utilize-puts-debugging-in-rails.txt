@@ -54,3 +54,55 @@ menjadi :
     puts "*" * 500
     @page_title = "Dani Portfolio | My Blog Website"
   end
+
+3. MEMBUAT SELF ACTION UNTUK FUNGSI LIMIT PADA MODEL BLOG
+
+- buka model blog.rb
+
+tambahkan :
+	def self.featured_blogs
+		#limit(2)
+	end
+
+sehingga :
+
+class Blog < ApplicationRecord
+	enum status: { draft: 0, published: 1 }
+	extend FriendlyId
+	friendly_id :title, use: :slugged
+
+	validates_presence_of :title, :body, :topic_id
+
+	belongs_to :topic
+
+	def self.special_blogs # selft method/action adalah sebuah aksi dari model/class itu sendiri(self) dan bisa dipanggil hanya pada object class tersebut
+		#limit(2)
+		all
+	end
+
+	def self.featured_blogs
+		limit(2)
+	end
+end
+
+- buka blogs_controller.rb
+
+pada action method index, bisa dipanggil fungsi featured_blogs tadi melalui Object Blog :
+
+
+@blogs = Blog.featured_blogs
+
+sehingga :
+
+ def index
+    #byebug
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    #@blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    @blogs = Blog.featured_blogs
+    #byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end

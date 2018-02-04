@@ -1,0 +1,540 @@
+REFF:
+https://github.com/deivid-rodriguez/pry-byebug
+
+==================
+debugging rails 5 dengan pry
+
+1. buka gemfile 
+pada group :development, :test do
+
+# tambahkan gem
+
+end 
+
+
+tambahkan :
+
+gem 'pry-byebug'
+
+
+sehingga :
+
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '~> 2.13'
+  gem 'selenium-webdriver'
+  gem 'pry-byebug'
+end
+
+2. bundle
+
+
+### MEMPERBAIKI PORTFOLIO CONTROLLERS N MEMBUAT CALLBACK UNTUK SETIAP METHOD BEFORE ACTION edit, Update, Destroy, Show ###
+3. buka portfolios_controller.rb
+- tambahkan :
+
+before_action :set_portfolio_item, only: [:edit, :update, :destroy]
+
+##### sehingga :
+
+class PortfoliosController < ApplicationController
+	before_action :set_portfolio_item, only: [:edit, :update, :destroy]
+	layout "portfolio"
+	def index
+		@portfolio_items = Portfolio.all
+		# @portfolio_items = Portfolio.where(subtitle: 'Ruby On Rails')
+		# @portfolio_items = Portfolio.angular # dari method self.angular dari model portfolio.rb
+		# @portfolio_items = Portfolio.ruby_on_rails_portfolio_items # dari scope dari model portfolio.rb
+	end
+
+	def angular
+		@angular_portfolio_items = Portfolio.angular # dari method self.angular di model portfolio.rb 
+	end
+
+	def show
+	end
+
+	def new
+		@portfolio_item = Portfolio.new
+		3.times { @portfolio_item.technologies.build }
+	end
+
+	def create
+	@portfolio_item = Portfolio.new(portfolio_params)  #pakai params.require(:portfolio).permit(:title, :subtitle, :body) supaya aman 
+	
+	respond_to do |format|
+		if @portfolio_item.save 
+      	format.html { redirect_to portfolios_path, notice: 'Portfolio was successfully created.' } #portolios_path dari routes prefix
+      	format.json { render :show, status: :ok, location: @portfolio_item }
+      else
+      	format.html { render :new }
+      	format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+      end
+  end
+end
+
+def edit
+	@portfolio_item = Portfolio.find(params[:id])
+	#3.times { @portfolio_item.technologies.build }	# jika ingin setiap kali sudah insert nambah terus 3 input (OPTIONAL)
+end
+
+def update
+	@portfolio_item = Portfolio.find(params[:id])
+	respond_to do |format|
+		# if @portfolio_item.update(params.require(:portfolio).permit(:title, :subtitle, :body))
+		if @portfolio_item.update(portfolio_params)
+			format.html { redirect_to portfolios_path, notice: 'Portfolios was successfully updated.' }
+			format.json { render :show, status: :ok, location: @portfolio_item }
+		else
+			format.html { render :edit }
+			format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+		end
+	end
+end
+
+def show
+	@portfolio_item = Portfolio.find(params[:id])
+end
+
+def destroy
+	# perform the lookup
+	@portfolio_item = Portfolio.find(params[:id])
+
+	# destroy/delete  the record
+	@portfolio_item.destroy
+
+	#redirect
+	respond_to do |format|
+		format.html { redirect_to portfolios_url, notice: 'Record was removed.' }
+	end
+end
+
+private
+
+def portfolio_params
+	params.require(:portfolio).permit(:title, 
+									  :subtitle, 
+									  :body, 
+									  technologies_attributes: [:name]
+									  )
+end
+
+end
+
+
+- pada portfolios_controller.rb buat method set_portfolio_item
+
+def set_portfolio_item
+	@portfolio_item = Portfolio.find(params[:id])
+end
+
+
+##### sehingga :
+
+
+class PortfoliosController < ApplicationController
+	before_action :set_portfolio_item, only: [:edit, :update, :destroy]
+	layout "portfolio"
+	def index
+		@portfolio_items = Portfolio.all
+		# @portfolio_items = Portfolio.where(subtitle: 'Ruby On Rails')
+		# @portfolio_items = Portfolio.angular # dari method self.angular dari model portfolio.rb
+		# @portfolio_items = Portfolio.ruby_on_rails_portfolio_items # dari scope dari model portfolio.rb
+	end
+
+	def angular
+		@angular_portfolio_items = Portfolio.angular # dari method self.angular di model portfolio.rb 
+	end
+
+	def show
+	end
+
+	def new
+		@portfolio_item = Portfolio.new
+		3.times { @portfolio_item.technologies.build }
+	end
+
+	def create
+	@portfolio_item = Portfolio.new(portfolio_params)  #pakai params.require(:portfolio).permit(:title, :subtitle, :body) supaya aman 
+	
+	respond_to do |format|
+		if @portfolio_item.save 
+      	format.html { redirect_to portfolios_path, notice: 'Portfolio was successfully created.' } #portolios_path dari routes prefix
+      	format.json { render :show, status: :ok, location: @portfolio_item }
+      else
+      	format.html { render :new }
+      	format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+      end
+  end
+end
+
+def edit
+	@portfolio_item = Portfolio.find(params[:id])
+	#3.times { @portfolio_item.technologies.build }	# jika ingin setiap kali sudah insert nambah terus 3 input (OPTIONAL)
+end
+
+def update
+	@portfolio_item = Portfolio.find(params[:id])
+	respond_to do |format|
+		# if @portfolio_item.update(params.require(:portfolio).permit(:title, :subtitle, :body))
+		if @portfolio_item.update(portfolio_params)
+			format.html { redirect_to portfolios_path, notice: 'Portfolios was successfully updated.' }
+			format.json { render :show, status: :ok, location: @portfolio_item }
+		else
+			format.html { render :edit }
+			format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+		end
+	end
+end
+
+def show
+	@portfolio_item = Portfolio.find(params[:id])
+end
+
+def destroy
+	# perform the lookup
+	@portfolio_item = Portfolio.find(params[:id])
+
+	# destroy/delete  the record
+	@portfolio_item.destroy
+
+	#redirect
+	respond_to do |format|
+		format.html { redirect_to portfolios_url, notice: 'Record was removed.' }
+	end
+end
+
+private
+
+def portfolio_params
+	params.require(:portfolio).permit(:title, 
+									  :subtitle, 
+									  :body, 
+									  technologies_attributes: [:name]
+									  )
+end
+
+def set_portfolio_item
+	@portfolio_item = Portfolio.find(params[:id])
+end
+
+end
+
+
+
+- pada method/action show/update/edit/destroy hapus syntax ini :
+
+@portfolio_item = Portfolio.find(params[:id])
+
+
+4. rails s
+- pastikan crud portfolios sukses
+- coba masuk show : http://localhost:3000/portfolio/19
+
+# JIKA ERROR NoMethodError in Portfolios#show
+kita akan debug dengan pry pada bagian portfolios/show.html.erb
+
+- buka portfolios/show.html.erb
+- tambahkan :
+
+<% binding.pry %>
+
+- sehingga :
+
+<% binding.pry %>
+
+<%= image_tag @portfolio_item.main_image %>
+<h1><%=@portfolio_item.title %></h1>
+<em><%=@portfolio_item.subtitle %></em>
+<p><%=@portfolio_item.body %></p>
+
+<h2>Technology Used:</h2>
+
+<% @portfolio_item.technologies.each do |t| %>
+<p><%= t.name %></p>
+<% end %>
+
+<%#=@portfolio_item.inspect %>
+
+<%#= params.inspect %>
+<%#= params[:action] %>
+
+
+<%#= Portfolio.find(params[:id]) %>
+<%#= Portfolio.find(params[:id]).title %>
+<%#= Portfolio.find(params[:id]).technologies %>
+
+<!-- <hr> -->
+<%#= params.inspect %>
+<!-- <hr> -->
+<%#= session.inspect %>
+
+- Lihat pada terminal rails s, akan ada logs debug :
+
+From: H:/laragon/www/rubyonrails/professional-rails-lima-development-course/app/
+views/portfolios/show.html.erb @ line 2 ActionView::CompiledTemplates#_app_views
+_portfolios_show_html_erb___578467173_134146340:
+
+    1: <% binding.pry %>
+ => 2:
+    3: <%= image_tag @portfolio_item.main_image %>
+    4: <h1><%=@portfolio_item.title %></h1>
+    5: <em><%=@portfolio_item.subtitle %></em>
+    6: <p><%=@portfolio_item.body %></p>
+    7:
+[1] pry(#<#<Class:0x0000000e4e8eb0>>)>
+
+- coba cek instance variable @portfolio_item
+pada [1] pry(#<#<Class:0x0000000e4e8eb0>>)>
+
+ketikan :
+
+@portfolio_item 
+
+jika nil maka benar kosong pasti error.
+
+- coba ketikan
+params
+
+jika muncul :
+
+[2] pry(#<#<Class:0x0000000e4e8eb0>>)> params
+=> <ActionController::Parameters {"controller"=>"portfolios", "action"=>"show",
+"id"=>"19"} permitted: true>
+
+berarti dia ada di controller portfolios dengan method/action show mencari id 19 dan permitted true
+
+- coba kita letakan binding.pry pada action/method/def show portfolios
+
+hapus binding pry pada show.html.erb dulu :
+
+ini dihapus : 
+
+<% binding.pry %>
+
+atau comment :
+
+<%# binding.pry %>
+
+- buka portfolios.controllerb
+pada def show tambahkan :
+binding.pry
+
+sehingga :
+
+def show
+	binding.pry
+end
+
+- jalankan lagi pada halaman portfolios akan muncul :
+
+From: H:/laragon/www/rubyonrails/professional-rails-lima-development-course/app/
+controllers/portfolios_controller.rb @ line 56 PortfoliosController#show:
+
+    54: def show
+    55:         binding.pry
+ => 56: end
+
+pada pry, ketik :
+
+params # akan nil hasilnya
+@portfolio_item # akan nil hasilnya
+
+### SOLUSI ###
+
+kenapa saat kita debug dengan params, @portfolio_item tidak muncul isi parameternya yang dicari
+karena pada before_action callback kita belum
+set only :show
+
+- buka controller portfolios_controller.rb
+tambahkan action show pada callback before_action :
+
+:show
+
+sehingga :
+
+before_action :set_portfolio_item, only: [:edit, :show, :update, :destroy]
+
+- coba lagi run http://localhost:3000/portfolio/19
+
+lihat terminal :
+
+From: H:/laragon/www/rubyonrails/professional-rails-lima-development-course/app/
+controllers/portfolios_controller.rb @ line 56 PortfoliosController#show:
+
+    54: def show
+    55:         binding.pry
+ => 56: end
+[1] pry(#<PortfoliosController>)>
+
+coba ketik :
+@portfolio_item
+
+jika berhasil muncul data :
+
+[1] pry(#<PortfoliosController>)> @portfolio_item
+=> #<Portfolio:0x0000000bdfd620
+ id: 19,
+ title: "dasdas",
+ subtitle: "dsadasd",
+ body: "sadas",
+ main_image: "http://placehold.it/600x400",
+ thumb_image: "http://placehold.it/350x200",
+ created_at: Sun, 04 Feb 2018 07:09:44 UTC +00:00,
+ updated_at: Sun, 04 Feb 2018 07:09:44 UTC +00:00>
+
+# coba panggil dengan object
+@portfolio_item.title
+
+- coba ketik params 
+[2] pry(#<PortfoliosController>)> params
+=> <ActionController::Parameters {"controller"=>"portfolios", "action"=>"show",
+"id"=>"19"} permitted: true>
+
+sudah berhasil di permit dan show .
+
+- jika selesai dan ingin melanjutkan proses pada pry ketik :
+continue 
+
+- matikan binding.pry pada action show 
+
+def show
+	#binding.pry
+end
+
+
+## JIKA INGIN DEBUG PADA ACTION LAIN BISA MENGGUNAKAN CARA DAN TAHAPAN SEPERTI DIATAS 
+DENGAN MENSERTAKAN binding.pry bisa pada templating anak controller maupun induk controller si application_controller.rb
+
+
+5. buka blogs_controller.rb
+
+pada method index :
+
+  def index
+    #byebug
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    #@blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    @blogs = Blog.featured_blogs
+    #byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+ubah menjadi :
+
+  def index
+    #byebug
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    binding.pry
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    binding.pry
+    @blogs = Blog.featured_blogs
+    #byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
+    binding.pry
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+disini kita memasukan binding.pry sebelum @blogs = Blog.special_blogs dan @blogs = Blog.featured_blogs dan 
+@page_title = "Dani Portfolio | My Blog Website"
+
+- coba run http://localhost:3000/blogs
+
+- lihat terminal disana akan mulai debug pry yang menghasilkan :
+
+Started GET "/blogs" for 127.0.0.1 at 2018-02-04 14:39:17 +0700
+Processing by BlogsController#index as HTML
+
+From: H:/laragon/www/rubyonrails/professional-rails-lima-development-course/app/
+controllers/blogs_controller.rb @ line 13 BlogsController#index:
+
+     7: def index
+     8:   #byebug
+     9:   # @blogs = Blog.all
+    10:   #puts "*" * 500
+    11:   # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    12:   binding.pry
+ => 13:   @blogs = Blog.special_blogs # special_blogs merupakan self action/meth
+od dari model/class Blog itu sendiri
+    14:   binding.pry
+    15:   @blogs = Blog.featured_blogs
+    16:   #byebug
+    17:   #puts @blogs.inspect
+    18:   #puts "*" * 500
+    19:   binding.pry
+    20:   @page_title = "Dani Portfolio | My Blog Website"
+    21: end
+
+- coba ketik pada pry debug :
+
+@blogs # jika nil hasilnya maka masih belum ada isi dalam object tersbut atau belum ada proses yang meload object tersebut yang tereksekusi
+
+- coba ketik pada pry debug :
+
+next 
+
+dan coba lagi ketik :
+
+@blogs
+
+# jika berhasil muncul data maka sudah berhasil karena object @blogs sudah terload
+
+hasilnya :
+
+ #<Blog:0x00000010e50cd0
+  id: 2,
+  title: "My Blog Post 1",
+  body:
+   "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque mole
+stias voluptates minus iusto pariatur aliquam, nulla exercitationem et necessita
+tibus ratione ipsam maiores dolorem a repellendus, vel harum, ut modi.",
+  created_at: Sun, 14 Jan 2018 08:41:06 UTC +00:00,
+  updated_at: Sun, 14 Jan 2018 08:41:06 UTC +00:00,
+  slug: "my-blog-post-1",
+  status: "draft",
+  topic_id: 3>,
+ #<Blog:0x00000010e50b18
+  id: 3,
+  title: "My Blog Post 2",
+  body:
+   "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus atque mole
+
+- coba ketik :
+@blogs.count
+
+- ketik untuk selesai dan melanjutkan seluruh proses :
+continue 
+
+
+- matikan/comment debug pry pada blogs_controller action index, jika sewaktu waktu ingin debug di aktifkan
+kembali :
+
+  def index
+    #byebug
+    # @blogs = Blog.all
+    #puts "*" * 500
+    # @blogs = Blog.limit(2) # ini untuk melimit data menjadi 2
+    #binding.pry
+    @blogs = Blog.special_blogs # special_blogs merupakan self action/method dari model/class Blog itu sendiri
+    #binding.pry
+    #@blogs = Blog.featured_blogs
+    #byebug
+    #puts @blogs.inspect
+    #puts "*" * 500
+    #binding.pry
+    @page_title = "Dani Portfolio | My Blog Website"
+  end
+
+6. git status
+git add .
+git commit -m "Refactored before action for portfolio setting and debug binding pry testing"
+git push
