@@ -1,0 +1,262 @@
+REFF:
+=============
+
+cara membangun rubygem dari NOL
+jadi kalau biasa kita cari dependency disini https://rubygems.org/
+
+nah kita bisa buat dependency sendiri dan punya sendiri disini https://rubygems.org/
+
+kalau kita search misalnya DevCampViewTool yang tadinya belum ada di https://rubygems.org/ menjadi ada 
+dan bisa kita install menggunakan bundler misal gem install DevcampViewTool atau gem 'DevcampViewTool'
+
+
+
+1. buat folder professional-rails-lima-development-course-114-115-build-ruby-gems
+
+2. jika kita ingin membuat ruby gem sesuai versi ruby harus kita set ENV nya dulu, 
+- jika linux : rvm 2.4.0
+- jika pakai windows : rubyinstaller versi 2.4.0 atau 2.3.3
+
+3. bundle gem devcamp_view_tool
+4. cd devcamp_view_tool
+5. buka project devcamp_view_tool dengan sublime/editor
+6. buka devcamp_view_tool.gemspec
+
+hapus : 
+
+# Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
+  # to allow pushing to a single host or delete this section to allow pushing to any host.
+  if spec.respond_to?(:metadata)
+    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+  else
+    raise "RubyGems 2.0 or newer is required to protect against " \
+      "public gem pushes."
+  end
+
+sehingga : 
+
+
+lib = File.expand_path("../lib", __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require "devcamp_view_tool/version"
+
+Gem::Specification.new do |spec|
+  spec.name          = "devcamp_view_tool"
+  spec.version       = DevcampViewTool::VERSION
+  spec.authors       = ["Dani Gunawan"]
+  spec.email         = ["danigunawan.elektroug@gmail.com"]
+
+  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
+  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.license       = "MIT"
+
+
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^(test|spec|features)/})
+  end
+  spec.bindir        = "exe"
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+
+  spec.add_development_dependency "bundler", "~> 1.16"
+  spec.add_development_dependency "rake", "~> 10.0"
+end
+
+3. buka lib/devcamp_view_tool.rb
+tambahkan :
+require "devcamp_view_tool/renderer"
+
+sehingga :
+
+require "devcamp_view_tool/version"
+require "devcamp_view_tool/renderer"
+
+module DevcampViewTool
+  # Your code goes here...
+end
+
+4. buat file renderer.rb di lib/devcamp_view_tool/renderer.rb
+isikan :
+
+module DevcampViewTool
+   class Renderer
+    def self.copyright name, msg
+      "&copy; #{Time.now.year} | <b>#{name}</b> #{msg}".html_safe
+    end
+  end
+end
+
+5. buat repo baru professional-rails-lima-development-course-114-115
+git status
+git add .
+git commit -m "Dev tool initial commit"
+git remote add origin git@github.com:danigunawan/professional-rails-lima-devel
+opment-course-114-115.git
+git push -u origin master
+
+6. buka README.md pada project 
+
+ubah :
+
+Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/devcamp_view_tool`. To experiment with that code, run `bin/console` for an interactive prompt.
+
+menjadi :
+
+> Various view specific methods for applications I user.
+
+7. echo "*.gem" >> .gitignore # kita akan mengignore seluruh nama yang extensi .gem agar tidak bisa di push atau pull.
+
+- hasilnya bisa dilihat di gitignore
+
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+"*.gem"  # ini hasil tadi
+
+8. git status
+git add .
+git commit -m "Updated gitignore file and readme"
+git push
+
+9. lihat perubahannya di repo : https://github.com/danigunawan/professional-rails-lima-development-course-114-115
+
+10. buka README.md
+
+ganti usage menjadi :
+
+## Usage
+
+
+```ruby
+DevcampViewTool::Renderer.copyright 'Jordan Hudgens', 'All right reserved'
+```
+
+11. gem build devcamp_view_tool.gemspec
+12. git status
+git add .
+git commit -m "Generate app and update readme" # atau git ci -m "Generate app and update readme"
+git push
+
+
+CARA 2 MENGGUNAKAN GEM YANG DIBUAT TADI
+============================================
+13. kita akan install gem DevCampViewTool tadi yang sudah dibuild 
+
+dalam project professional-rails-lima-development-course pada application_controller.rb kita matikan dulu karena kita akan reinstall gem module yang sama :
+
+matikan / hapus : 
+
+module DevcampViewTool
+  class Renderer
+    def self.copyright name, msg
+      "&copy; #{Time.now.year} | <b>#{name}</b> #{msg}".html_safe
+    end
+  end
+end
+
+
+14. buka GEMFILE pada project professional-rails-lima-development-course
+
+- tambahkan :
+
+gem 'devcamp_view_tool', git: 'https://github.com/danigunawan/professional-rails-lima-development-course-114-115'
+
+- bundle install
+
+- rails s 
+
+
+
+15. buka application_controller.rb
+
+- hapus bagian ini :
+
+  before_action :set_copyright
+
+  def set_copyright
+    @copyright = DevcampViewTool::Renderer.copyright 'Jordan Hudgens', 'All right reserved'
+  end
+end
+
+module DevcampViewTool
+  class Renderer
+    def self.copyright name, msg
+      "&copy; #{Time.now.year} | <b>#{name}</b> #{msg}".html_safe
+    end
+  end
+end
+
+
+- buka helpers/application_helper.rb
+
+tambahkan : 
+
+def copyright_generator
+  DevcampViewTool::Renderer.copyright 'Jordan Hudgens', 'All right reserved'
+end
+
+sehingga :
+
+
+module ApplicationHelper
+	def sample_helper
+		"<p>My Helper</p>".html_safe # fungsi html_safe agar bisa menggunakan tag html jika tidak dipakai maka tidak akan berfungsi tag html
+	end
+
+	def login_helper
+		if current_user.is_a?(User)
+			link_to "Logout", destroy_user_session_path, method: :delete
+		else
+			(link_to "Register", new_user_registration_path) + "<br>".html_safe +
+			(link_to "Login", new_user_session_path)
+		end
+	end
+
+	def sample_paragraf
+		content_tag(:div, "My Contentss", class: "my-class")
+	end
+
+	def source_helper(layout_name)
+		if session[:source]
+			# cara 1
+			#"<p>thanks for visiting me from #{session[:source]}</p>"
+			
+			# cara 2
+			# content_tag(:p, "thanks for visiting me from #{session[:source]}")
+			
+			# cara 3
+			greeting = "thanks for visiting me from #{session[:source]} and kamu ada di layout #{layout_name}"
+			content_tag(:p, greeting, class: "source-greeting")
+		end
+	end
+
+	def copyright_generator
+		DevcampViewTool::Renderer.copyright 'Jordan Hudgens', 'All right reserved'
+	end
+
+end
+
+
+KET : PENGGUNAAN GEM MODULE DIATAS YANG DIBUAT TADI DENGAN FUNGSI DIPINDAHKAN DARI APPLICATION_CONTROLLER.RB KE HELPER SECARA PENGGUNAAN SAMA SAJA OUTPUTNYA
+HANYA LEBIH TERPROSEDUR
+
+16. buka views/application.html.erb
+
+ubah : 
+
+<%= @copyright %> # yang tidak menggunakan gem tadi yang dibuild atau secara manual
+
+menjadi :
+
+<%= copyright_generator %> # menggunakan gem tadi yang dibuild dan fungsi copyright_generator diambil/dibuat dari helper
+
+17. git status
+git add .
+git commit -m "Integrated new gem into rails app for copyright"
+git push origin rubygem

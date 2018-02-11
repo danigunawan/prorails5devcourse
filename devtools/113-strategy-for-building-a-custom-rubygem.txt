@@ -1,0 +1,152 @@
+REFF:
+
+==============
+
+cara membangun custom rubygem
+pada contoh ini membuat module render untuk menampilkan copyright
+
+
+CARA 1 TIDAK MENGGUNAKAN GEM BUILD
+=====================================
+
+1. buka application_controller.rb
+
+- ubah : 
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+  include CurrentUserConcern
+  include DefaultPageContent
+  # byebug
+end
+
+
+- menjadi :
+
+
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  # # jika tidak menggunakan concerns untuk permitted parameter devise
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+
+  # def configure_permitted_parameters
+  # 	devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  # 	devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  # end
+
+  # Jika Menggunakan Concerns untuk permitted parameter devise
+  include DeviseWhitelist  #in module /controllers/concerns/devise_whiteliset.rb
+
+  # before_action :set_source
+
+  # def set_source
+  # 	session[:source] = params[:q] if params[:q]
+  # end
+
+  include SetSource # diambil dari nama class set_source.rb module SetSource
+  include CurrentUserConcern
+  include DefaultPageContent
+  # byebug
+
+  before_action :set_copyright
+
+  def set_copyright
+    @copyright = DevcampViewTool::Renderer.copyright 'Jordan Hudgens', 'All right reserved'
+  end
+end
+
+module DevcampViewTool
+  class Renderer
+    def self.copyright name, msg
+      "&copy; #{Time.now.year} | <b>#{name}</b> #{msg}".html_safe
+    end
+  end
+end
+
+
+ket : diatas membuat module baru DevcampViewTool untuk merender dan method pada ApplicationController membuat 
+def set_copyright untuk membuat instance variabel berisi fungsi module devcampviewtool menampilkan render copyright
+
+2. buka app/views/layouts/application.html.erb
+
+kita tambahkan :
+
+<%= @copyright %> # ini diambil dari  def set_copyright @copyright = DevcampViewTool::Renderer.copyright pada application_controller tadi
+
+- ubah : 
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<%= render "shared/nav", location: 'top' %>
+	
+	<%= login_helper %>
+	
+	<%= yield %>
+	
+	<%= source_helper("application") %>
+	
+</body>
+</html>
+
+- menjadi :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<%= render "shared/nav", location: 'top' %>
+	
+	<%= login_helper %>
+	
+	<%= yield %>
+	<%= @copyright %>
+	<%= source_helper("application") %>
+	
+</body>
+</html>
