@@ -31,4 +31,5 @@ git push origin rubygem
 
 ## AKHIRI BRANCH RUBY GEM (TIDAK AKAN PUSH KE BRANCH rubygem lagi tapi dipindah ke master lagi defaultnya)
 git checkout master
-git merge rubygem
+git merge rubygem # git merge rubygem ini jadi yang kita push pada branch rubygem akan kita merge ke master (filefile yang terbaru pada branch rubygem
+akan menggantikan file-file yang ada pada master) artinya di merge.
