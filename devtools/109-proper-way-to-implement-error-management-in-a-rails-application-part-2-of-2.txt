@@ -8,7 +8,7 @@ def divide num1,num2
 begin
   num1 / num2
   asdsadasd
-  rescue ZeroDivisionError =>
+  rescue ZeroDivisionError => e
    puts "Error: #{e}"
    end
 end

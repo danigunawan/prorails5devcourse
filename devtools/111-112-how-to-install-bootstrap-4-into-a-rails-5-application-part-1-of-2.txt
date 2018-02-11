@@ -1,0 +1,219 @@
+REFF:
+
+https://v4-alpha.getbootstrap.com/
+https://v4-alpha.getbootstrap.com/getting-started/download/
+
+https://github.com/twbs/bootstrap-rubygem
+=================
+cara install bootstrap 4 di rails 5
+
+1. git status
+git checkout app/models/user.rb
+
+git checkout -b rubygem
+
+2. rails s
+
+### TAMBAH MANUAL CSS BOOTSTRAP TANPA GEM ### 
+3. buka layouts/application.html.erb
+
+tambahkan links css booststrap style :
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+	
+	<%= render "shared/nav", location: 'top' %>
+	
+	<%= login_helper %>
+	
+	<%= yield %>
+	
+	<%= source_helper("application") %>
+	
+</body>
+</html>
+
+
+### END TAMBAH MANUAL CSS BOOTSTRAP TANPA GEM ### 
+
+
+### TAMBAH CSS BOOTSTRAP DENGAN GEM ### 
+3.1 jika dengan gem hapus dulu link css yang manual tadi diatas :
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+4. buka Gemfile
+tambahkan :
+
+gem 'bootstrap', '~> 4.0.0.alpha6'
+
+5. bundle install
+
+### END TAMBAH CSS BOOTSTRAP DENGAN GEM ###
+
+
+4. git status
+git checkout app/views/layouts/application.html.erb
+
+
+
+
+### PART 2 ####
+
+6. bundle install
+7. buka assets/stylesheets/application.scss
+ubah : 
+
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+.top a{
+	color: brown;
+}
+
+
+menjadi : 
+
+@import "bootstrap";
+
+
+8. buka assets/stylesheets/blogs.scss
+ubah : 
+
+
+// Place all the styles related to the Blogs controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+	background-color: grey;
+}
+
+.bottom a {
+	color: white;
+}
+
+
+menjadi : 
+
+@import "bootstrap";
+
+9. buka assets/stylesheets/pages.scss
+ubah : 
+
+
+// Place all the styles related to the Pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+menjadi : 
+
+@import "bootstrap";
+
+10. buka assets/stylesheets/portfolios.scss
+tambahkan :
+//require= bootstrap-sprockets
+
+ubah : 
+
+
+// Place all the styles related to the Portfolios controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+	background-color: black;
+	color: white;
+}
+
+.top a{
+	color: red;
+}
+
+menjadi :
+
+@import "bootstrap";
+
+11. buka assets/javascripts/application.js
+
+ubah :
+
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
+// vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file. JavaScript code in this file should be added after the last require_* statement.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require rails-ujs
+//= require turbolinks
+//= require_tree .
+
+
+menjadi :
+
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
+// vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file. JavaScript code in this file should be added after the last require_* statement.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require jquery-rails
+//= require bootstrap-sprockets
+//= require jquery_ujs
+//= require rails-ujs
+//= require turbolinks
+//= require_tree .
+
+12. bundle update
+    bundle install
+13. git status
+git add .
+git commit -m "Implemented bootstrap gem and styles"
+git push origin rubygem
