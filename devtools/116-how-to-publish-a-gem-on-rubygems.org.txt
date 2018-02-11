@@ -1,0 +1,34 @@
+REFF :
+
+=========================
+
+cara mempublish ruby gem build tadi yang dibuat ke rubygems.org
+
+
+1. SIGNUP ke rubygems.org
+2. masuk https://rubygems.org/profile/edit
+3. generate api_access
+
+curl -u danigunawan https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials; chmod 0600 ~/.gem/credentials
+
+4. cd pada project gem build yang dibuat tadi : professional-rails-lima-development-course-114-115-build-ruby-gems/devcamp_view_tool
+5. bundle exec rake release
+6 cek di profile akun sendiri akan ada gems baru yang di release ke : https://rubygems.org
+
+
+
+
+### PENGGUNAAN PADA PROJECT APLIKASI DAN PADA GEMFILE JADINYA 
+
+gem 'devcamp_view_tool', '~> 0.1.0'
+
+bundle install
+
+7. git status
+git add .
+git commit -m "Updated call to rubygems for copyright generator"
+git push origin rubygem
+
+## AKHIRI BRANCH RUBY GEM (TIDAK AKAN PUSH KE BRANCH rubygem lagi tapi dipindah ke master lagi defaultnya)
+git checkout master
+git merge rubygem

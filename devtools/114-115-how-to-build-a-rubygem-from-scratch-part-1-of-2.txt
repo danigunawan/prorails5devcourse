@@ -260,3 +260,9 @@ menjadi :
 git add .
 git commit -m "Integrated new gem into rails app for copyright"
 git push origin rubygem
+
+
+
+######### JIKA INGIN RELEASE DAN PUBLISH ############
+18. bundle install
+bundle exec rake release
