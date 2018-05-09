@@ -26,6 +26,9 @@ git checkout -b authorization
 
 4. bundle install
 
-5. git status
+5. kita akan push ke branch authorization 
+
+git status
 git add .
 git commit -m "Installed petergate gem for authorization"
+git push origin authorization
