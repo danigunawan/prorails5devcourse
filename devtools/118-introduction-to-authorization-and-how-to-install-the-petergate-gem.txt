@@ -1,0 +1,31 @@
+REFF:
+https://github.com/elorest/petergate
+================
+1. git branch
+
+  authentication
+  controller
+  data-feature
+* master 
+  model-generator
+  my-great-feature
+  portfolio-feature
+  resource-generator
+  rubygem
+  view
+
+# default ada pada branch master kita akan switch dan buat branch baru dengan nama authorization tapi 
+sebelum itu kita add gemfile dulu untuk gem petergate.
+
+2. buka gemfile tambahkan :
+
+gem 'petergate', '~> 1.7'
+
+3. membuat branch baru dan switch ke branch baru tersebut yakni authorization
+git checkout -b authorization
+
+4. bundle install
+
+5. git status
+git add .
+git commit -m "Installed petergate gem for authorization"
