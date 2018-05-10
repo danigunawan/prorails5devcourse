@@ -1,0 +1,21 @@
+REFF:
+lanjutan episode 118
+==============
+
+1. rails g petergate:install
+akan membuat model user.rb dan migration untuk tambah kolom roles ke table users
+
+  insert  app/models/user.rb
+  create  db/migrate/20180509155601_add_roles_to_users.rb
+
+2. cek di user.rb akan ada  line baru :
+
+petergate(roles: [:admin, :editor], multiple: false)   
+
+
+3. rails db:migrate
+
+4. git status
+git commit -m "Added installation requirments for petergate"
+
+5. git push origin authorization

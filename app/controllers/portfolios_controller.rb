@@ -1,8 +1,12 @@
 class PortfoliosController < ApplicationController
 	before_action :set_portfolio_item, only: [:edit, :show, :update, :destroy]
 	layout "portfolio"
-	def index
-		@portfolio_items = Portfolio.all
+
+	  #petergate
+	  access all: [:show, :index, :angular], user: {except: [:destroy, :new, :create, :update, :edit]}, site_admin: :all
+
+	  def index
+	  	@portfolio_items = Portfolio.all
 		# @portfolio_items = Portfolio.where(subtitle: 'Ruby On Rails')
 		# @portfolio_items = Portfolio.angular # dari method self.angular dari model portfolio.rb
 		# @portfolio_items = Portfolio.ruby_on_rails_portfolio_items # dari scope dari model portfolio.rb
@@ -68,10 +72,10 @@ private
 
 def portfolio_params
 	params.require(:portfolio).permit(:title, 
-									  :subtitle, 
-									  :body, 
-									  technologies_attributes: [:name]
-									  )
+		:subtitle, 
+		:body, 
+		technologies_attributes: [:name]
+		)
 end
 
 def set_portfolio_item
