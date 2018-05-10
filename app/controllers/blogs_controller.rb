@@ -2,6 +2,9 @@ class BlogsController < ApplicationController
   before_action :set_blog, only: [:show, :edit, :update, :destroy, :toggle_status] # sebelum aksi show edit update destroy memanggil call back dulu yakni set_blog
   layout "blog"
 
+  #petergate
+  access all: [:show, :index], user: {except: [:destroy, :new, :create, :update, :edit]}, site_admin: :all
+
   # GET /blogs
   # GET /blogs.json
   def index
