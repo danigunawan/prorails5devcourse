@@ -231,5 +231,5 @@ git push origin authorization
 
 git checkout master
 
-# lalu kita merge authorization
-git merge authorization
+# lalu kita merge authorization ke master branch
+git merge authorization 

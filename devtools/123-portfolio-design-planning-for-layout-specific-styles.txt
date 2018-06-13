@@ -1,0 +1,14 @@
+REFF:
+
+1. download examples bootstrap
+https://v4-alpha.getbootstrap.com/examples
+
+2. git status
+git checkout master
+git merge authorization
+git push
+clear
+
+3. buat branch baru dengan nama design
+git checkout -b design
+clear
