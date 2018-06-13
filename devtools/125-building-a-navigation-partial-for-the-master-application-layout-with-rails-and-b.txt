@@ -1,0 +1,120 @@
+REFF:
+
+setelah dijalankan rails s ternyata menu home about contact dan lainnya masih berantakan
+kita akan memperbaiki nya. ! ^_^
+
+1. buka views/pages/home.html.erb
+- pada line ini kita cut pada 3  tag ini dan 3 tag penutupnya terakhir : 
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+
+
+      </div>
+
+      </div>
+
+    </div>
+- kita paste/pindahkan ke views/layouts/application.html.erb
+
+sebelum line <%= render "shared/nav", location: 'top' %>
+
+# sehingga : 
+
+
+<body>
+	<div class="site-wrapper">
+
+		<div class="site-wrapper-inner">
+
+			<div class="cover-container">
+
+				<p class="notice"><%= notice %></p>
+				<p class="alert"><%= alert %></p>
+
+				<%= render "shared/nav", location: 'top' %>
+
+				<%= login_helper %>
+
+				<%= yield %>
+				<%= @copyright %>
+				<%= source_helper("application") %>
+			</div>
+
+		</div>
+
+	</div>
+</body>
+</html>
+
+
+2. membuat render untuk navigation dengan nama _application_nav.html.erb di app/views/shared/_application_nav.html.erb
+
+- lalu pada views/layouts/application.html.erb 
+kita ubah code render ini :
+
+<%= render "shared/nav", location: 'top' %>
+
+menjadi :
+
+<%= render "shared/application_nav" %>
+
+- buka views/pages/home.html.erb
+cut code ini : 
+
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">Cover</h3>
+              <nav class="nav nav-masthead">
+                <a class="nav-link active" href="#">Home</a>
+                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" href="#">Contact</a>
+              </nav>
+            </div>
+          </div>
+
+- pastekan ke views/shared/_application_nav.html.erb
+
+- buka views/shared/_application_nav.html.erb
+
+ubah :
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">Cover</h3>
+              <nav class="nav nav-masthead">
+                <a class="nav-link active" href="#">Home</a>
+                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" href="#">Contact</a>
+              </nav>
+            </div>
+          </div>
+
+menjadi :
+
+<div class="masthead clearfix">
+  <div class="inner">
+    <h3 class="masthead-brand">Dani Gunawan</h3>
+    <nav class="nav nav-masthead">
+      <%= link_to "Home", root_path, class: 'nav-link' %>
+      <%= link_to "About", about_path, class: 'nav-link' %>
+      <%= link_to "Contact", contact_path, class: 'nav-link' %>
+      <%= link_to "Blog", blogs_path, class: 'nav-link' %>
+      <%= link_to "Portfolio", portfolios_path, class: 'nav-link' %>
+    </nav>
+  </div>
+</div>
+
+3. rails s
+
+pastikan sudah berhasil
+
+4. git status
+git add .
+git commit -m "updated styles for master layout file"
+git push origin design 
