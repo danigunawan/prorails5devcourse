@@ -1,0 +1,283 @@
+REFF:
+
+implementasi footer dengan menambahkan method argument pada rails view helper
+
+1.buka views/pages/home.html.erb
+
+cut pada bagian code tag ini :
+
+<div class="mastfoot">
+	<div class="inner">
+		<p>Cover template for <a href="https://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+	</div>
+</div>
+
+
+- buka views/layouts/application.html.erb
+
+paste code tag diatas setelah <%= yield %> dan copykan instance variable <%= @copyright %> pada tag p
+
+sehingga : 
+
+
+<body>
+	<div class="site-wrapper">
+
+		<div class="site-wrapper-inner">
+
+			<div class="cover-container">
+
+				<p class="notice"><%= notice %></p>
+				<p class="alert"><%= alert %></p>
+
+				<%= render "shared/application_nav" %>
+
+				<%= login_helper %>
+
+				<%= yield %>
+				
+				<div class="mastfoot">
+					<div class="inner">
+						<p><%= @copyright %></p>
+					</div>
+				</div>
+
+				<%= source_helper("application") %>
+			</div>
+
+		</div>
+
+	</div>
+</body>
+
+
+2. memindahkan masfooter ke render file
+- buka views/layouts/application.html.erb
+
+cut pada line code ini :
+
+<div class="mastfoot">
+	<div class="inner">
+	<p><%= @copyright %></p>
+	</div>
+</div>
+
+- dan gantikan dengan fungsi render :
+
+<%= render "shared/application_footer" %>
+
+# sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title><%= @page_title %></title>
+	<%= csrf_meta_tags %>
+	<meta name="keywords" content="<%= @seo_keywords %>" />
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" href="../../favicon.ico">
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+	<div class="site-wrapper">
+
+		<div class="site-wrapper-inner">
+
+			<div class="cover-container">
+
+				<p class="notice"><%= notice %></p>
+				<p class="alert"><%= alert %></p>
+
+				<%= render "shared/application_nav" %>
+
+				<%= login_helper %>
+
+				<%= yield %>
+				<%= render "shared/application_footer" %>
+				<%= source_helper("application") %>
+			</div>
+
+		</div>
+
+	</div>
+</body>
+</html>
+
+
+- buat file render di views/shared/_application_footer.html.erb 
+
+lalu paste code yang dicut tadi 
+
+# sehingga isi _application_footer.html.erb :
+
+<div class="mastfoot">
+	<div class="inner">
+	<p><%= @copyright %></p>
+	</div>
+</div>
+
+3. buka views/layouts/application.html.erb
+
+- cut code ini :
+
+<%= login_helper %>
+
+- pindahkan ke views/shared/_application_nav.html.erb
+
+sehingga : 
+
+<div class="masthead clearfix">
+  <div class="inner">
+    <h3 class="masthead-brand">Dani Gunawan</h3>
+    <nav class="nav nav-masthead">
+      <%= link_to "Home", root_path, class: 'nav-link' %>
+      <%= link_to "About", about_path, class: 'nav-link' %>
+      <%= link_to "Contact", contact_path, class: 'nav-link' %>
+      <%= link_to "Blog", blogs_path, class: 'nav-link' %>
+      <%= link_to "Portfolio", portfolios_path, class: 'nav-link' %>
+      <%= login_helper %>
+    </nav>
+  </div>
+</div>
+
+CARA 1 - Navlink helpers
+========
+
+dengan cara ini kita bisa langsung memanggil class css dari helpers
+jadi kita mendefinisikan isi dari  <%= login_helper %> pada application_helper.rb 
+pada action login_helper
+
+- buka app/helpers/application_helper.rb
+
+ubah pada action login_helper dengan menambahkan class nav-link agar css bisa match dan rapih
+
+# dari :
+
+def login_helper
+		if current_user.is_a?(GuestUser)
+			(link_to "Register", new_user_registration_path) + "<br>".html_safe +
+			(link_to "Login", new_user_session_path)
+		else
+			link_to "Logout", destroy_user_session_path, method: :delete
+		end
+	end
+
+# menjadi :
+
+
+	def login_helper
+		if current_user.is_a?(GuestUser)
+			(link_to "Register", new_user_registration_path, class: 'nav-link') + " ".html_safe +
+			(link_to "Login", new_user_session_path, class: 'nav-link')
+		else
+			link_to "Logout", destroy_user_session_path, method: :delete, class: 'nav-link'
+		end
+	end
+
+
+CARA 2 - Navlink helpers
+========
+dengan cara ini kita bisa langsung memanggil class css langsung dari local variables pass 
+yg asalnya dari <%= login_helper %> kita pass menjadi <%= login_helper 'nav-link'%> 
+
+
+- buka app/helpers/application_helper.rb
+
+# ubah dari :
+
+def login_helper
+		if current_user.is_a?(GuestUser)
+			(link_to "Register", new_user_registration_path) + "<br>".html_safe +
+			(link_to "Login", new_user_session_path)
+		else
+			link_to "Logout", destroy_user_session_path, method: :delete
+		end
+	end
+
+# menjadi :
+
+	def login_helper style
+		if current_user.is_a?(GuestUser)
+			(link_to "Register", new_user_registration_path, class: style) + " ".html_safe +
+			(link_to "Login", new_user_session_path, class: style)
+		else
+			link_to "Logout", destroy_user_session_path, method: :delete, class: style
+		end
+	end
+
+
+### PADA action def login_helper style (style sendiri adalah sebuah identitas/pengenal/penghubung untuk parameter variabel passing yang dipakai)
+ 
+- buka _application_nav.html.erb
+# ubah dari :
+ <%= login_helper %>
+
+# menjadi :
+
+ <%= login_helper 'nav-link' %>
+
+
+
+4. mengatur posisi agar lebih elegan pada content depan
+
+- buka app/assets/stylesheets/application.scss
+
+# ubah ini :
+
+@media (min-width: 62em) {
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 42rem;
+  }
+}
+
+# menjadi :
+
+@media (min-width: 62em) {
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 55rem;
+  }
+}
+
+5. buka home.html.erb
+
+menambahkan linking about me
+
+ubah ini :
+
+<p class="lead">
+		<a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+</p>
+
+menjadi :
+
+<p class="lead">
+		<a href="/about" class="btn btn-lg btn-secondary">Learn more</a>
+</p>
+
+# atau : 
+
+<p class="lead">
+		<a href="<%= about_path %>" class="btn btn-lg btn-secondary">Learn more</a>
+</p>
+
+# Atau 2 : 
+
+
+<p class="lead">
+	<%= link_to "About Me", about_path, class: "btn btn-lg btn-secondary" %>
+</p>
+
+
+6. git status
+git add .
+git commit -m "Updated master layout styles along with helper methods"
+git push origin design
